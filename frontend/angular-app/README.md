@@ -57,3 +57,43 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+## Deployment Notes
+
+### Environment Files
+
+API configuration now lives in Angular environment files:
+
+- `src/environments/environment.ts` - local development
+- `src/environments/environment.prod.ts` - production
+
+Current values:
+
+```ts
+// local
+apiBaseUrl: 'http://localhost:5197'
+
+// production
+apiBaseUrl: 'https://your-backend-url.com'
+```
+
+Before production deployment:
+
+1. Replace `https://your-backend-url.com` in `environment.prod.ts` with your real backend URL.
+2. Build the Angular app using the production configuration.
+
+### Build Commands
+
+Local development:
+
+```bash
+ng serve
+```
+
+Production build:
+
+```bash
+ng build
+```
+
+Angular will automatically use `environment.prod.ts` for the production build because of the file replacement in `angular.json`.

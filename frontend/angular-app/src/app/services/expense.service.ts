@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
+import { environment } from '../../environments/environment';
 import { Expense } from '../models/expense';
 
 @Injectable({
@@ -9,7 +10,7 @@ import { Expense } from '../models/expense';
 })
 export class ExpenseService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:5197/api/expenses';
+  private readonly apiUrl = `${environment.apiBaseUrl}/api/expenses`;
 
   getTodayExpenses(): Observable<Expense[]> {
     return this.http.get<Expense[]>(`${this.apiUrl}/today`);

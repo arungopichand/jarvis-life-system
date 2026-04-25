@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
+import { environment } from '../../environments/environment';
 import { DailyLog } from '../models/daily-log';
 
 @Injectable({
@@ -9,7 +10,7 @@ import { DailyLog } from '../models/daily-log';
 })
 export class DailyLogService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:5197/api/dailylog';
+  private readonly apiUrl = `${environment.apiBaseUrl}/api/dailylog`;
 
   getTodayLog(): Observable<DailyLog> {
     return this.http.get<DailyLog>(`${this.apiUrl}/today`);

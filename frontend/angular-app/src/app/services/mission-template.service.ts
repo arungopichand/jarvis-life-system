@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
+import { environment } from '../../environments/environment';
 import { MissionTemplate } from '../models/mission-template';
 
 @Injectable({
@@ -9,7 +10,7 @@ import { MissionTemplate } from '../models/mission-template';
 })
 export class MissionTemplateService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:5197/api/mission-templates';
+  private readonly apiUrl = `${environment.apiBaseUrl}/api/mission-templates`;
 
   getTemplates(): Observable<MissionTemplate[]> {
     return this.http.get<MissionTemplate[]>(this.apiUrl);

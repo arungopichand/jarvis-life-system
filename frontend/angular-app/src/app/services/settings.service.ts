@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
+import { environment } from '../../environments/environment';
 import { UserSettings } from '../models/user-settings';
 
 @Injectable({
@@ -9,7 +10,7 @@ import { UserSettings } from '../models/user-settings';
 })
 export class SettingsService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:5197/api/settings';
+  private readonly apiUrl = `${environment.apiBaseUrl}/api/settings`;
 
   getSettings(): Observable<UserSettings> {
     return this.http.get<UserSettings>(this.apiUrl);

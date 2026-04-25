@@ -50,3 +50,53 @@ backend/Jarvis.Api
 - `Domain` - core entities and rules
 - `Infrastructure` - data access and external integrations
 - `Contracts` - request and response models
+
+## Deployment Notes
+
+### Environment Configuration
+
+The API now reads configuration by environment:
+
+- `appsettings.json` - shared settings
+- `appsettings.Development.json` - local development settings
+- `appsettings.Production.json` - production settings
+
+### Connection Strings
+
+Development uses LocalDB only:
+
+```json
+"ConnectionStrings": {
+  "DefaultConnection": "Server=(localdb)\\MSSQLLocalDB;Database=JarvisLifeDb;Trusted_Connection=True;TrustServerCertificate=True;"
+}
+```
+
+Production uses a placeholder SQL connection string in `appsettings.Production.json`.
+Replace it before deployment with your real production SQL Server or Azure SQL connection string.
+
+### CORS
+
+Allowed frontend origins are configured in `appsettings.json` under:
+
+```json
+"Cors": {
+  "AllowedOrigins": [
+    "http://localhost:4200",
+    "https://your-frontend-url.com"
+  ]
+}
+```
+
+Before production deployment:
+
+1. Replace `https://your-frontend-url.com` with your real frontend URL.
+2. Replace the production SQL connection string placeholder.
+3. Set `ASPNETCORE_ENVIRONMENT=Production` on the server.
+
+### Build
+
+Run from `backend/Jarvis.Api`:
+
+```powershell
+dotnet build
+```

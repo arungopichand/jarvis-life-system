@@ -36,6 +36,19 @@
       (refreshGuidance)="refreshGuidance()"
     />
 
+    <app-battle-plan
+      [missions]="missions"
+      [focusMissionId]="focusMissionId"
+      [mainSkill]="userSettings.mainSkill"
+      [dailySpendingLimit]="userSettings.dailySpendingLimit"
+      [totalSpentToday]="totalSpentToday"
+      [currentStreak]="streakStats.currentStreak"
+      [averageCompletionPercentageThisWeek]="averageCompletionPercentageThisWeek"
+      [gymMinutesTarget]="userSettings.gymMinutesTarget"
+      [currentConfidencePrompt]="currentConfidencePrompt"
+      [currentEnglishPrompt]="currentEnglishPrompt"
+    />
+
     <app-user-settings
       [settings]="userSettings"
       [successMessage]="settingsSuccessMessage"
