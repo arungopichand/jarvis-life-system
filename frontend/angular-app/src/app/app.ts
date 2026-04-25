@@ -56,6 +56,8 @@ import { StatsService } from './services/stats.service';
   encapsulation: ViewEncapsulation.None
 })
 export class App implements OnInit {
+  readonly layoutModes = ['Daily Mode', 'Review Mode', 'Setup Mode'] as const;
+
   // Training Room
   private readonly englishPrompts = [
     'Speak for 2 minutes about your day.',
@@ -75,6 +77,7 @@ export class App implements OnInit {
 
   // Dashboard state
   title = 'JARVIS Life System';
+  selectedLayoutMode: typeof this.layoutModes[number] = 'Daily Mode';
   missions: Mission[] = [];
   expenses: Expense[] = [];
   isLoading = true;
@@ -141,6 +144,10 @@ export class App implements OnInit {
     this.loadTodayExpenses();
     this.loadStreakStats();
     this.loadWeeklyStats();
+  }
+
+  setLayoutMode(mode: typeof this.layoutModes[number]): void {
+    this.selectedLayoutMode = mode;
   }
 
   loadSettings(): void {

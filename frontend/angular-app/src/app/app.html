@@ -24,111 +24,149 @@
       </p>
     </section>
 
-    <app-summary-cards
-      [todayXpEarned]="todayXpEarned"
-      [totalPossibleXp]="totalPossibleXp"
-      [currentLevel]="currentLevel"
-      [dailyCompletionPercentage]="dailyCompletionPercentage"
-      [streakStats]="streakStats"
-      [streakRewardMessage]="streakRewardMessage"
-      [guidanceState]="currentGuidanceState"
-      [streakStatsErrorMessage]="streakStatsErrorMessage"
-    />
+    <section class="mode-switcher">
+      <div class="mode-switcher__header">
+        <div>
+          <p class="mode-switcher__eyebrow">Layout</p>
+          <h2>Dashboard Mode</h2>
+        </div>
+      </div>
 
-    <app-battle-plan
-      [missions]="missions"
-      [focusMissionId]="focusMissionId"
-      [mainSkill]="userSettings.mainSkill"
-      [dailySpendingLimit]="userSettings.dailySpendingLimit"
-      [totalSpentToday]="totalSpentToday"
-      [currentStreak]="streakStats.currentStreak"
-      [averageCompletionPercentageThisWeek]="averageCompletionPercentageThisWeek"
-      [gymMinutesTarget]="userSettings.gymMinutesTarget"
-      [currentConfidencePrompt]="currentConfidencePrompt"
-      [currentEnglishPrompt]="currentEnglishPrompt"
-    />
+      <div class="mode-switcher__options">
+        @for (mode of layoutModes; track mode) {
+          <button
+            type="button"
+            class="mode-switcher__button"
+            [class.mode-switcher__button--active]="selectedLayoutMode === mode"
+            (click)="setLayoutMode(mode)"
+          >
+            {{ mode }}
+          </button>
+        }
+      </div>
+    </section>
 
-    <app-mood-check-in
-      [selectedMood]="selectedMood"
-      (selectedMoodChange)="onMoodSelected($event)"
-    />
+    @if (selectedLayoutMode === 'Daily Mode') {
+      <app-summary-cards
+        [todayXpEarned]="todayXpEarned"
+        [totalPossibleXp]="totalPossibleXp"
+        [currentLevel]="currentLevel"
+        [dailyCompletionPercentage]="dailyCompletionPercentage"
+        [streakStats]="streakStats"
+        [streakRewardMessage]="streakRewardMessage"
+        [guidanceState]="currentGuidanceState"
+        [streakStatsErrorMessage]="streakStatsErrorMessage"
+      />
 
-    <app-focus-timer
-      (timerCompletedChange)="onFocusTimerCompleted($event)"
-    />
+      <app-mood-check-in
+        [selectedMood]="selectedMood"
+        (selectedMoodChange)="onMoodSelected($event)"
+      />
 
-    <app-achievements
-      [completedMissionsToday]="completedMissionsToday"
-      [totalSpentToday]="totalSpentToday"
-      [dailySpendingLimit]="userSettings.dailySpendingLimit"
-      [isFocusSessionComplete]="isFocusSessionComplete"
-      [morningCompleted]="dailyLog?.morningCompleted ?? false"
-      [nightCompleted]="dailyLog?.nightCompleted ?? false"
-      [currentStreak]="streakStats.currentStreak"
-    />
+      <app-focus-timer
+        (timerCompletedChange)="onFocusTimerCompleted($event)"
+      />
 
-    <app-user-settings
-      [settings]="userSettings"
-      [successMessage]="settingsSuccessMessage"
-      [errorMessage]="settingsErrorMessage"
-      (save)="saveSettings()"
-    />
+      <app-daily-checklist
+        [morningChecklist]="morningChecklist"
+        [nightChecklist]="nightChecklist"
+        [errorMessage]="dailyLogErrorMessage"
+        (morningChecklistChange)="onMorningChecklistChange()"
+        (nightChecklistChange)="onNightChecklistChange()"
+      />
 
-    <app-daily-checklist
-      [morningChecklist]="morningChecklist"
-      [nightChecklist]="nightChecklist"
-      [errorMessage]="dailyLogErrorMessage"
-      (morningChecklistChange)="onMorningChecklistChange()"
-      (nightChecklistChange)="onNightChecklistChange()"
-    />
+      <app-missions
+        [missions]="missions"
+        [focusMissionId]="focusMissionId"
+        [isLoading]="isLoading"
+        [errorMessage]="errorMessage"
+        (completeMission)="completeMission($event)"
+        (resetDay)="resetDay()"
+      />
 
-    <app-jarvis-assistant
-      [chatHistory]="chatHistory"
-      [assistantMessage]="assistantMessage"
-      (assistantMessageChange)="assistantMessage = $event"
-      (send)="sendAssistantMessage()"
-    />
+      <app-finance-lab
+        [expenses]="expenses"
+        [expenseForm]="expenseForm"
+        [totalSpentToday]="totalSpentToday"
+        [errorMessage]="financeErrorMessage"
+        (expenseFormChange)="expenseForm = $event"
+        (addExpense)="addExpense()"
+        (removeExpense)="removeExpense($event)"
+      />
 
-    <app-training-room
-      [currentEnglishPrompt]="currentEnglishPrompt"
-      [currentConfidencePrompt]="currentConfidencePrompt"
-      [currentTypingPrompt]="currentTypingPrompt"
-      [gymMinutesTarget]="userSettings.gymMinutesTarget"
-      [proteinGramsTarget]="userSettings.proteinGramsTarget"
-      (nextEnglishPrompt)="showNextEnglishPrompt()"
-      (nextConfidencePrompt)="showNextConfidencePrompt()"
-      (nextTypingPrompt)="showNextTypingPrompt()"
-    />
+      <app-jarvis-assistant
+        [chatHistory]="chatHistory"
+        [assistantMessage]="assistantMessage"
+        (assistantMessageChange)="assistantMessage = $event"
+        (send)="sendAssistantMessage()"
+      />
 
-    <app-weekly-review
-      [weeklyStats]="weeklyStats"
-      [totalCompletedMissionsThisWeek]="totalCompletedMissionsThisWeek"
-      [averageCompletionPercentageThisWeek]="averageCompletionPercentageThisWeek"
-      [totalSpentThisWeek]="totalSpentThisWeek"
-      [errorMessage]="weeklyStatsErrorMessage"
-    />
+      <app-achievements
+        [completedMissionsToday]="completedMissionsToday"
+        [totalSpentToday]="totalSpentToday"
+        [dailySpendingLimit]="userSettings.dailySpendingLimit"
+        [isFocusSessionComplete]="isFocusSessionComplete"
+        [morningCompleted]="dailyLog?.morningCompleted ?? false"
+        [nightCompleted]="dailyLog?.nightCompleted ?? false"
+        [currentStreak]="streakStats.currentStreak"
+      />
 
-    <app-finance-lab
-      [expenses]="expenses"
-      [expenseForm]="expenseForm"
-      [totalSpentToday]="totalSpentToday"
-      [errorMessage]="financeErrorMessage"
-      (expenseFormChange)="expenseForm = $event"
-      (addExpense)="addExpense()"
-      (removeExpense)="removeExpense($event)"
-    />
+      <app-battle-plan
+        [missions]="missions"
+        [focusMissionId]="focusMissionId"
+        [mainSkill]="userSettings.mainSkill"
+        [dailySpendingLimit]="userSettings.dailySpendingLimit"
+        [totalSpentToday]="totalSpentToday"
+        [currentStreak]="streakStats.currentStreak"
+        [averageCompletionPercentageThisWeek]="averageCompletionPercentageThisWeek"
+        [gymMinutesTarget]="userSettings.gymMinutesTarget"
+        [currentConfidencePrompt]="currentConfidencePrompt"
+        [currentEnglishPrompt]="currentEnglishPrompt"
+      />
 
-    <app-mission-history />
+      <app-training-room
+        [currentEnglishPrompt]="currentEnglishPrompt"
+        [currentConfidencePrompt]="currentConfidencePrompt"
+        [currentTypingPrompt]="currentTypingPrompt"
+        [gymMinutesTarget]="userSettings.gymMinutesTarget"
+        [proteinGramsTarget]="userSettings.proteinGramsTarget"
+        (nextEnglishPrompt)="showNextEnglishPrompt()"
+        (nextConfidencePrompt)="showNextConfidencePrompt()"
+        (nextTypingPrompt)="showNextTypingPrompt()"
+      />
+    }
 
-    <app-mission-templates />
+    @if (selectedLayoutMode === 'Review Mode') {
+      <app-weekly-review
+        [weeklyStats]="weeklyStats"
+        [totalCompletedMissionsThisWeek]="totalCompletedMissionsThisWeek"
+        [averageCompletionPercentageThisWeek]="averageCompletionPercentageThisWeek"
+        [totalSpentThisWeek]="totalSpentThisWeek"
+        [errorMessage]="weeklyStatsErrorMessage"
+      />
 
-    <app-missions
-      [missions]="missions"
-      [focusMissionId]="focusMissionId"
-      [isLoading]="isLoading"
-      [errorMessage]="errorMessage"
-      (completeMission)="completeMission($event)"
-      (resetDay)="resetDay()"
-    />
+      <app-mission-history />
+
+      <app-achievements
+        [completedMissionsToday]="completedMissionsToday"
+        [totalSpentToday]="totalSpentToday"
+        [dailySpendingLimit]="userSettings.dailySpendingLimit"
+        [isFocusSessionComplete]="isFocusSessionComplete"
+        [morningCompleted]="dailyLog?.morningCompleted ?? false"
+        [nightCompleted]="dailyLog?.nightCompleted ?? false"
+        [currentStreak]="streakStats.currentStreak"
+      />
+    }
+
+    @if (selectedLayoutMode === 'Setup Mode') {
+      <app-user-settings
+        [settings]="userSettings"
+        [successMessage]="settingsSuccessMessage"
+        [errorMessage]="settingsErrorMessage"
+        (save)="saveSettings()"
+      />
+
+      <app-mission-templates />
+    }
   </section>
 </main>
