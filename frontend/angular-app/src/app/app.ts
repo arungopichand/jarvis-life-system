@@ -410,6 +410,33 @@ export class App implements OnInit {
     return this.weeklyStats.reduce((total, day) => total + day.totalSpent, 0);
   }
 
+  get dailyScore(): number {
+    const missionScore = Math.round((this.dailyCompletionPercentage / 100) * 50);
+    const checklistScore =
+      (this.dailyLog?.morningCompleted ? 10 : 0) +
+      (this.dailyLog?.nightCompleted ? 10 : 0);
+    const spendingScore = this.totalSpentToday <= this.userSettings.dailySpendingLimit ? 15 : 0;
+    const focusScore = this.isFocusSessionComplete ? 15 : 0;
+
+    return missionScore + checklistScore + spendingScore + focusScore;
+  }
+
+  get dailyScoreStatus(): string {
+    if (this.dailyScore <= 40) {
+      return 'Wake up. Do one small task now.';
+    }
+
+    if (this.dailyScore <= 70) {
+      return 'Decent. Push a little more.';
+    }
+
+    if (this.dailyScore <= 90) {
+      return 'Good day. Finish strong.';
+    }
+
+    return 'Elite discipline.';
+  }
+
   get streakRewardMessage(): string {
     if (this.streakStats.currentStreak === 0) {
       return 'Start your streak today.';

@@ -10,6 +10,12 @@ import { StreakStats } from '../models/streak-stats';
   imports: [CommonModule],
   template: `
     <section class="stats-grid">
+      <article class="stat-card stat-card--score stat-card--wide">
+        <span class="stat-card__label">Daily Score</span>
+        <strong class="stat-card__value">Daily Score: {{ dailyScore }} / 100</strong>
+        <span class="stat-card__hint">{{ dailyScoreStatus }}</span>
+      </article>
+
       <article class="stat-card stat-card--xp">
         <span class="stat-card__label">Today XP Earned</span>
         <strong class="stat-card__value">{{ todayXpEarned }}</strong>
@@ -84,6 +90,15 @@ import { StreakStats } from '../models/streak-stats';
       overflow: hidden;
     }
 
+    .stat-card--wide {
+      grid-column: span 2;
+    }
+
+    .stat-card--score {
+      border-color: rgba(122, 246, 197, 0.22);
+      background: linear-gradient(135deg, rgba(8, 32, 35, 0.96), rgba(9, 24, 37, 0.94));
+    }
+
     .stat-card::after {
       content: '';
       position: absolute;
@@ -118,6 +133,18 @@ import { StreakStats } from '../models/streak-stats';
     .stat-card__hint {
       color: var(--text-muted);
       font-size: 0.82rem;
+    }
+
+    @media (max-width: 820px) {
+      .stat-card--wide {
+        grid-column: span 2;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .stat-card--wide {
+        grid-column: span 1;
+      }
     }
 
     .streak-card {
@@ -197,6 +224,8 @@ export class SummaryCardsComponent {
   @Input({ required: true }) totalPossibleXp!: number;
   @Input({ required: true }) currentLevel!: number;
   @Input({ required: true }) dailyCompletionPercentage!: number;
+  @Input({ required: true }) dailyScore!: number;
+  @Input({ required: true }) dailyScoreStatus!: string;
   @Input({ required: true }) streakStats!: StreakStats;
   @Input({ required: true }) streakRewardMessage!: string;
   @Input({ required: true }) guidanceState!: GuidanceState;

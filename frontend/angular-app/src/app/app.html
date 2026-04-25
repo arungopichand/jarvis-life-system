@@ -53,14 +53,16 @@
     </section>
 
     @if (selectedLayoutMode === 'Daily Mode') {
-      <app-summary-cards
-        [todayXpEarned]="todayXpEarned"
-        [totalPossibleXp]="totalPossibleXp"
-        [currentLevel]="currentLevel"
-        [dailyCompletionPercentage]="dailyCompletionPercentage"
-        [streakStats]="streakStats"
-        [streakRewardMessage]="streakRewardMessage"
-        [guidanceState]="currentGuidanceState"
+    <app-summary-cards
+      [todayXpEarned]="todayXpEarned"
+      [totalPossibleXp]="totalPossibleXp"
+      [currentLevel]="currentLevel"
+      [dailyCompletionPercentage]="dailyCompletionPercentage"
+      [dailyScore]="dailyScore"
+      [dailyScoreStatus]="dailyScoreStatus"
+      [streakStats]="streakStats"
+      [streakRewardMessage]="streakRewardMessage"
+      [guidanceState]="currentGuidanceState"
         [streakStatsErrorMessage]="streakStatsErrorMessage"
       />
 
