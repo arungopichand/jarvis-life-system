@@ -124,6 +124,7 @@ export class App implements OnInit {
     this.settingsService.getSettings().subscribe({
       next: (settings) => {
         this.userSettings = settings;
+        this.refreshGuidance();
       },
       error: () => {
         this.settingsErrorMessage = 'Could not load user settings.';
@@ -306,8 +307,12 @@ export class App implements OnInit {
     const totalMissionCount = this.missions.length;
     const trackExpensesMission = this.missions.find((mission) => mission.title === 'Track Expenses');
     const hasCompletedExpenseTracking = trackExpensesMission?.isCompleted ?? false;
+    const spendingLimit = this.userSettings.dailySpendingLimit;
+    const skillFocusMessage = this.userSettings.mainSkill.trim()
+      ? ` Focus skill: ${this.userSettings.mainSkill}.`
+      : '';
 
-    if (this.totalSpentToday > 500) {
+    if (this.totalSpentToday > spendingLimit) {
       this.nextActionMessage = 'Spending alert. Review today\'s expenses before buying anything else.';
       return;
     }
@@ -323,7 +328,7 @@ export class App implements OnInit {
     }
 
     if (totalMissionCount > 0 && completedMissionCount < totalMissionCount) {
-      this.nextActionMessage = 'Good progress. Complete one more mission now.';
+      this.nextActionMessage = `Good progress. Complete one more mission now.${skillFocusMessage}`;
       return;
     }
 
@@ -461,6 +466,7 @@ export class App implements OnInit {
       next: (settings) => {
         this.userSettings = settings;
         this.settingsSuccessMessage = 'Settings saved.';
+        this.refreshGuidance();
       },
       error: () => {
         this.settingsErrorMessage = 'Could not save user settings.';
@@ -500,12 +506,16 @@ export class App implements OnInit {
   private getAssistantReply(message: string): string {
     const normalizedMessage = message.toLowerCase();
 
+    if (normalizedMessage.includes('skill') || normalizedMessage.includes('study')) {
+      return `Focus on your current main skill: ${this.userSettings.mainSkill}. Do 25 minutes now.`;
+    }
+
     if (normalizedMessage.includes('lazy') || normalizedMessage.includes('procrastinate')) {
       return 'Do 5 minutes only. Start with your Focus Now mission.';
     }
 
     if (normalizedMessage.includes('money') || normalizedMessage.includes('spend')) {
-      return 'Open Finance Lab and enter today\'s expenses before buying anything else.';
+      return `Your daily spending limit is ${this.userSettings.dailySpendingLimit}. Check Finance Lab before spending more.`;
     }
 
     if (normalizedMessage.includes('english')) {
