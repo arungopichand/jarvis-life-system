@@ -71,6 +71,71 @@
       <p class="guide-panel__message">{{ nextActionMessage }}</p>
     </section>
 
+    <section class="finance-panel">
+      <div class="finance-panel__header">
+        <div>
+          <p class="finance-panel__eyebrow">Profile</p>
+          <h2>User Settings</h2>
+        </div>
+      </div>
+
+      <form
+        style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:20px;"
+        (ngSubmit)="saveSettings()"
+      >
+        <label class="field">
+          <span>Daily Spending Limit</span>
+          <input
+            type="number"
+            name="dailySpendingLimit"
+            [(ngModel)]="userSettings.dailySpendingLimit"
+            min="0"
+            step="0.01"
+          />
+        </label>
+
+        <label class="field">
+          <span>Main Skill</span>
+          <input
+            type="text"
+            name="mainSkill"
+            [(ngModel)]="userSettings.mainSkill"
+            placeholder=".NET"
+          />
+        </label>
+
+        <label class="field">
+          <span>Gym Minutes Target</span>
+          <input
+            type="number"
+            name="gymMinutesTarget"
+            [(ngModel)]="userSettings.gymMinutesTarget"
+            min="0"
+          />
+        </label>
+
+        <label class="field">
+          <span>Protein Grams Target</span>
+          <input
+            type="number"
+            name="proteinGramsTarget"
+            [(ngModel)]="userSettings.proteinGramsTarget"
+            min="0"
+          />
+        </label>
+
+        <button type="submit" class="finance-button">Save Settings</button>
+      </form>
+
+      @if (settingsSuccessMessage) {
+        <p class="info-message">{{ settingsSuccessMessage }}</p>
+      }
+
+      @if (settingsErrorMessage) {
+        <p class="error-message">{{ settingsErrorMessage }}</p>
+      }
+    </section>
+
     <section class="training-panel">
       <div class="training-panel__header">
         <div>

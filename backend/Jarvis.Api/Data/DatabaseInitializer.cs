@@ -4,7 +4,7 @@ namespace Jarvis.Api.Data;
 
 public static class DatabaseInitializer
 {
-    private static readonly string[] ExpectedTables = ["Missions", "Expenses", "DailyLogs"];
+    private static readonly string[] ExpectedTables = ["Missions", "Expenses", "DailyLogs", "UserSettings"];
 
     public static async Task InitializeAsync(AppDbContext dbContext, ILogger logger)
     {

@@ -6,10 +6,12 @@ import { Expense } from './models/expense';
 import { DailyLog } from './models/daily-log';
 import { Mission } from './models/mission';
 import { StreakStats } from './models/streak-stats';
+import { UserSettings } from './models/user-settings';
 import { WeeklyStats } from './models/weekly-stats';
 import { DailyLogService } from './services/daily-log.service';
 import { ExpenseService } from './services/expense.service';
 import { MissionService } from './services/mission.service';
+import { SettingsService } from './services/settings.service';
 import { StatsService } from './services/stats.service';
 
 type ChatMessage = {
@@ -54,10 +56,19 @@ export class App implements OnInit {
   errorMessage = '';
   financeErrorMessage = '';
   dailyLogErrorMessage = '';
+  settingsErrorMessage = '';
+  settingsSuccessMessage = '';
   streakStatsErrorMessage = '';
   weeklyStatsErrorMessage = '';
   nextActionMessage = '';
   dailyLog: DailyLog | null = null;
+  userSettings: UserSettings = {
+    id: 0,
+    dailySpendingLimit: 500,
+    mainSkill: '.NET',
+    gymMinutesTarget: 45,
+    proteinGramsTarget: 80
+  };
   streakStats: StreakStats = {
     currentStreak: 0,
     longestStreak: 0
@@ -93,15 +104,31 @@ export class App implements OnInit {
     private dailyLogService: DailyLogService,
     private missionService: MissionService,
     private expenseService: ExpenseService,
+    private settingsService: SettingsService,
     private statsService: StatsService
   ) {}
 
   ngOnInit(): void {
+    this.loadSettings();
     this.loadTodayDailyLog();
     this.loadTodayMissions();
     this.loadTodayExpenses();
     this.loadStreakStats();
     this.loadWeeklyStats();
+  }
+
+  loadSettings(): void {
+    this.settingsErrorMessage = '';
+    this.settingsSuccessMessage = '';
+
+    this.settingsService.getSettings().subscribe({
+      next: (settings) => {
+        this.userSettings = settings;
+      },
+      error: () => {
+        this.settingsErrorMessage = 'Could not load user settings.';
+      }
+    });
   }
 
   loadTodayDailyLog(): void {
@@ -424,6 +451,21 @@ export class App implements OnInit {
 
   showNextTypingPrompt(): void {
     this.typingPromptIndex = (this.typingPromptIndex + 1) % this.typingPrompts.length;
+  }
+
+  saveSettings(): void {
+    this.settingsErrorMessage = '';
+    this.settingsSuccessMessage = '';
+
+    this.settingsService.saveSettings(this.userSettings).subscribe({
+      next: (settings) => {
+        this.userSettings = settings;
+        this.settingsSuccessMessage = 'Settings saved.';
+      },
+      error: () => {
+        this.settingsErrorMessage = 'Could not save user settings.';
+      }
+    });
   }
 
   onMorningChecklistChange(): void {
