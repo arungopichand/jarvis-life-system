@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { SummaryCardsComponent } from './components/summary-cards.component';
 import { UserSettingsComponent } from './components/user-settings.component';
 import { BattlePlanComponent } from './components/battle-plan.component';
+import { MoodCheckInComponent } from './components/mood-check-in.component';
 import { DailyChecklistComponent } from './components/daily-checklist.component';
 import { JarvisAssistantComponent } from './components/jarvis-assistant.component';
 import { TrainingRoomComponent } from './components/training-room.component';
@@ -33,6 +34,7 @@ import { StatsService } from './services/stats.service';
     CommonModule,
     FormsModule,
     BattlePlanComponent,
+    MoodCheckInComponent,
     SummaryCardsComponent,
     UserSettingsComponent,
     DailyChecklistComponent,
