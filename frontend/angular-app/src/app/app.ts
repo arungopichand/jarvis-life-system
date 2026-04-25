@@ -18,6 +18,7 @@ import { MissionHistoryComponent } from './components/mission-history.component'
 import { MissionTemplatesComponent } from './components/mission-templates.component';
 import { MissionsComponent } from './components/missions.component';
 import { Expense } from './models/expense';
+import { DailyLifeProtocolComponent } from './components/daily-life-protocol.component';
 import { FounderDisciplineProtocolComponent } from './components/founder-discipline-protocol.component';
 import { ChatMessage } from './models/chat-message';
 import { ChecklistItem } from './models/checklist-item';
@@ -53,6 +54,7 @@ import { StatsService } from './services/stats.service';
     MissionHistoryComponent,
     MissionTemplatesComponent,
     MissionsComponent,
+    DailyLifeProtocolComponent,
     FounderDisciplineProtocolComponent
   ],
   templateUrl: './app.html',
@@ -410,6 +412,12 @@ export class App implements OnInit {
 
   get completedMissionsToday(): number {
     return this.missions.filter((mission) => mission.isCompleted).length;
+  }
+
+  get currentFocusMissionTitle(): string {
+    const focusMission = this.missions.find((mission) => mission.id === this.focusMissionId);
+
+    return focusMission?.title ?? 'Complete the next mission in queue';
   }
 
   get totalCompletedMissionsThisWeek(): number {

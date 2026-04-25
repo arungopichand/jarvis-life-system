@@ -59,6 +59,17 @@
         (activateDisciplineMode)="activateDisciplineMode()"
       />
 
+      <app-daily-life-protocol
+        [dailySpendingLimit]="userSettings.dailySpendingLimit"
+        [mainSkill]="userSettings.mainSkill"
+        [gymMinutesTarget]="userSettings.gymMinutesTarget"
+        [proteinGramsTarget]="userSettings.proteinGramsTarget"
+        [currentEnglishPrompt]="currentEnglishPrompt"
+        [currentConfidencePrompt]="currentConfidencePrompt"
+        [focusMissionTitle]="currentFocusMissionTitle"
+        [currentStreak]="streakStats.currentStreak"
+      />
+
     <app-summary-cards
       [todayXpEarned]="todayXpEarned"
       [totalPossibleXp]="totalPossibleXp"
