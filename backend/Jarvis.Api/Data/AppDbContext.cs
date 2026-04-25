@@ -11,6 +11,8 @@ public class AppDbContext : DbContext
 
     public DbSet<Mission> Missions => Set<Mission>();
 
+    public DbSet<MissionTemplate> MissionTemplates => Set<MissionTemplate>();
+
     public DbSet<Expense> Expenses => Set<Expense>();
 
     public DbSet<DailyLog> DailyLogs => Set<DailyLog>();

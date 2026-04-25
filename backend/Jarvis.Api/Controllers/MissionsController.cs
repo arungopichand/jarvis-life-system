@@ -39,9 +39,24 @@ public class MissionsController : ControllerBase
 
         if (todayMissions.Count == 0)
         {
-            var defaultMissions = CreateDefaultMissionsForDate(today);
+            var missionTemplates = await _dbContext.MissionTemplates
+                .Where(template => template.IsEnabled)
+                .OrderBy(template => template.Id)
+                .ToListAsync();
 
-            _dbContext.Missions.AddRange(defaultMissions);
+            var missionsFromTemplates = missionTemplates
+                .Select(template => new Mission
+                {
+                    Title = template.Title,
+                    Description = template.Description,
+                    XpReward = template.XpReward,
+                    IsCompleted = false,
+                    MissionDate = today,
+                    Category = template.Category
+                })
+                .ToList();
+
+            _dbContext.Missions.AddRange(missionsFromTemplates);
             await _dbContext.SaveChangesAsync();
 
             todayMissions = await _dbContext.Missions
@@ -81,57 +96,5 @@ public class MissionsController : ControllerBase
         await _dbContext.SaveChangesAsync();
 
         return Ok(mission);
-    }
-
-    private static List<Mission> CreateDefaultMissionsForDate(DateTime date)
-    {
-        return
-        [
-            new Mission
-            {
-                Title = "Gym",
-                Description = "Complete your workout for today.",
-                XpReward = 30,
-                IsCompleted = false,
-                MissionDate = date,
-                Category = "Health"
-            },
-            new Mission
-            {
-                Title = "English Practice",
-                Description = "Practice speaking, reading, or writing in English.",
-                XpReward = 20,
-                IsCompleted = false,
-                MissionDate = date,
-                Category = "Learning"
-            },
-            new Mission
-            {
-                Title = "Track Expenses",
-                Description = "Record today's spending.",
-                XpReward = 15,
-                IsCompleted = false,
-                MissionDate = date,
-                Category = "Money"
-            },
-            new Mission
-            {
-                Title = "Learn .NET",
-                Description = "Spend time learning .NET today.",
-                XpReward = 30,
-                IsCompleted = false,
-                MissionDate = date,
-                Category = "Technical Skills"
-            },
-            new Mission
-            {
-                Title = "Eat Protein",
-                Description = "Make sure one meal today includes protein.",
-                XpReward = 20,
-                IsCompleted = false,
-                MissionDate = date,
-                Category = "Health"
-            }
-        ];
     }
 }
