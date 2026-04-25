@@ -54,6 +54,33 @@ npm start
 The Angular app runs at:
 - `http://localhost:4200`
 
+## How To Build Production Frontend
+
+Open a terminal in `frontend/angular-app` and run:
+
+```powershell
+npm install
+npm run build
+```
+
+The production files are generated in:
+- `frontend/angular-app/dist/angular-app`
+
+## PWA Install Notes
+
+The Angular frontend is configured as a basic installable PWA for daily mobile use.
+
+After deployment over HTTPS:
+- open the app in a supported browser such as Chrome or Edge
+- wait for the site to finish loading
+- use the browser install option such as `Install app` or `Add to Home Screen`
+- on mobile, add it to the home screen from the browser menu if prompted
+
+For local testing of the installed experience:
+- run `npm run build`
+- serve `frontend/angular-app/dist/angular-app/browser` from a local static server
+- open the served URL in a browser and install from there
+
 ## How To Run Backend
 
 Open a terminal in `backend/Jarvis.Api` and run:

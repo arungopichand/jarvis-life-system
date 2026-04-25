@@ -9,6 +9,9 @@ body {
     radial-gradient(circle at top, rgba(57, 214, 255, 0.1), transparent 28%),
     linear-gradient(180deg, #020304 0%, #06080b 55%, #030405 100%);
   color: #edf6ff;
+  min-width: 320px;
+  overscroll-behavior-y: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .success-message {

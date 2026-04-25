@@ -21,6 +21,7 @@ import { Expense } from './models/expense';
 import { DailyLifeProtocolComponent } from './components/daily-life-protocol.component';
 import { HydrationControlComponent } from './components/hydration-control.component';
 import { DopamineControlComponent } from './components/dopamine-control.component';
+import { EmotionalStabilityComponent } from './components/emotional-stability.component';
 import { SleepControlComponent } from './components/sleep-control.component';
 import { WealthBuilderComponent } from './components/wealth-builder.component';
 import { FounderDisciplineProtocolComponent } from './components/founder-discipline-protocol.component';
@@ -61,6 +62,7 @@ import { StatsService } from './services/stats.service';
     DailyLifeProtocolComponent,
     HydrationControlComponent,
     DopamineControlComponent,
+    EmotionalStabilityComponent,
     SleepControlComponent,
     WealthBuilderComponent,
     FounderDisciplineProtocolComponent
