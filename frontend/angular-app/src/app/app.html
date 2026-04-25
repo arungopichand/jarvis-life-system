@@ -57,6 +57,16 @@
       (timerCompletedChange)="onFocusTimerCompleted($event)"
     />
 
+    <app-achievements
+      [completedMissionsToday]="completedMissionsToday"
+      [totalSpentToday]="totalSpentToday"
+      [dailySpendingLimit]="userSettings.dailySpendingLimit"
+      [isFocusSessionComplete]="isFocusSessionComplete"
+      [morningCompleted]="dailyLog?.morningCompleted ?? false"
+      [nightCompleted]="dailyLog?.nightCompleted ?? false"
+      [currentStreak]="streakStats.currentStreak"
+    />
+
     <app-user-settings
       [settings]="userSettings"
       [successMessage]="settingsSuccessMessage"
