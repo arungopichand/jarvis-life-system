@@ -71,6 +71,44 @@
       <p class="guide-panel__message">{{ nextActionMessage }}</p>
     </section>
 
+    <section class="training-panel assistant-panel">
+      <div class="training-panel__header">
+        <div>
+          <p class="training-panel__eyebrow">Support</p>
+          <h2>JARVIS Assistant</h2>
+        </div>
+      </div>
+
+      <div class="assistant-history">
+        @for (message of chatHistory; track $index) {
+          <article
+            class="chat-message"
+            [class.chat-message--user]="message.sender === 'user'"
+            [class.chat-message--assistant]="message.sender === 'assistant'"
+          >
+            <span class="chat-message__label">
+              {{ message.sender === 'user' ? 'You' : 'JARVIS' }}
+            </span>
+            <p>{{ message.text }}</p>
+          </article>
+        }
+      </div>
+
+      <form class="assistant-form" (ngSubmit)="sendAssistantMessage()">
+        <label class="field">
+          <span>Message</span>
+          <input
+            type="text"
+            name="assistantMessage"
+            [(ngModel)]="assistantMessage"
+            placeholder="Ask JARVIS what to do next..."
+          />
+        </label>
+
+        <button type="submit" class="finance-button">Send</button>
+      </form>
+    </section>
+
     <section class="training-panel">
       <div class="training-panel__header">
         <div>

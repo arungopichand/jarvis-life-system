@@ -207,6 +207,50 @@
   background: rgba(73, 210, 255, 0.16);
 }
 
+.assistant-history {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 18px;
+  padding: 18px;
+  border: 1px solid rgba(73, 210, 255, 0.14);
+  border-radius: 20px;
+  background:rgba(7,18,31,.92);
+  overflow-y: auto;
+}
+
+.chat-message {
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(73, 210, 255, 0.12);
+  background: rgba(12, 29, 50, 0.9);
+}
+
+.chat-message--user {
+  justify-self: end;
+  background: rgba(16, 40, 54, 0.92);
+}
+
+.chat-message__label {
+  display: inline-block;
+  margin-bottom: 8px;
+  color: var(--accent);
+  font-size:.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.chat-message p {
+  margin: 0;
+  color: var(--text-main);
+  line-height: 1.6;
+}
+
+.assistant-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap:14px;
+}
+
 .training-panel {
   margin-bottom: 28px;
   padding: 24px;
@@ -760,6 +804,10 @@
     grid-template-columns: 1fr;
   }
 
+  .assistant-form {
+    grid-template-columns: 1fr;
+  }
+
   .finance-panel__header,
   .expense-form,
   .expense-card,
@@ -777,10 +825,6 @@
 
 @media (max-width: 640px) {
   .stats-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .review-grid {
     grid-template-columns: 1fr;
   }
 

@@ -10,6 +10,11 @@ import { ExpenseService } from './services/expense.service';
 import { MissionService } from './services/mission.service';
 import { StatsService } from './services/stats.service';
 
+type ChatMessage = {
+  sender: 'user' | 'assistant';
+  text: string;
+};
+
 @Component({
   selector: 'app-root',
   imports: [CommonModule, FormsModule],
@@ -52,6 +57,13 @@ export class App implements OnInit {
   englishPromptIndex = 0;
   confidencePromptIndex = 0;
   typingPromptIndex = 0;
+  assistantMessage = '';
+  chatHistory: ChatMessage[] = [
+    {
+      sender: 'assistant',
+      text: 'Systems ready. Tell me what is blocking you, and I will suggest the next action.'
+    }
+  ];
   expenseForm = {
     title: '',
     amount: null as number | null,
@@ -377,5 +389,48 @@ export class App implements OnInit {
 
   showNextTypingPrompt(): void {
     this.typingPromptIndex = (this.typingPromptIndex + 1) % this.typingPrompts.length;
+  }
+
+  // JARVIS Assistant
+  sendAssistantMessage(): void {
+    const userMessage = this.assistantMessage.trim();
+
+    if (!userMessage) {
+      return;
+    }
+
+    this.chatHistory.push({
+      sender: 'user',
+      text: userMessage
+    });
+
+    this.chatHistory.push({
+      sender: 'assistant',
+      text: this.getAssistantReply(userMessage)
+    });
+
+    this.assistantMessage = '';
+  }
+
+  private getAssistantReply(message: string): string {
+    const normalizedMessage = message.toLowerCase();
+
+    if (normalizedMessage.includes('lazy') || normalizedMessage.includes('procrastinate')) {
+      return 'Do 5 minutes only. Start with your Focus Now mission.';
+    }
+
+    if (normalizedMessage.includes('money') || normalizedMessage.includes('spend')) {
+      return 'Open Finance Lab and enter today\'s expenses before buying anything else.';
+    }
+
+    if (normalizedMessage.includes('english')) {
+      return 'Go to Training Room and speak for 2 minutes about your day.';
+    }
+
+    if (normalizedMessage.includes('gym')) {
+      return 'Do not think. Wear your shoes and go for 10 minutes.';
+    }
+
+    return 'Your next best action is to complete one mission now.';
   }
 }
