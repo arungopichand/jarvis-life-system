@@ -10,9 +10,14 @@ import { Mission } from '../models/mission';
   template: `
     <section class="missions-panel">
       <div class="missions-panel__header">
-        <div class="missions-panel__title-group">
-          <h2>Today's Missions</h2>
-          <span class="missions-panel__count">{{ missions.length }} missions</span>
+        <div>
+          <div class="missions-panel__title-group">
+            <h2>Today's Missions</h2>
+            <span class="missions-panel__count">{{ missions.length }} missions</span>
+          </div>
+          <p class="missions-panel__subtitle">
+            Work from the highlighted mission first, then clear the rest with one action at a time.
+          </p>
         </div>
 
         <button type="button" class="reset-day-button" (click)="resetDay.emit()">
@@ -100,6 +105,13 @@ import { Mission } from '../models/mission';
       font-size: 1.5rem;
     }
 
+    .missions-panel__subtitle {
+      margin: 10px 0 0;
+      color: var(--text-muted);
+      max-width: 560px;
+      line-height: 1.6;
+    }
+
     .missions-panel__count {
       padding: 8px 12px;
       border: 1px solid var(--border-color);
@@ -133,6 +145,7 @@ import { Mission } from '../models/mission';
     }
 
     .mission-card {
+      position: relative;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -142,6 +155,16 @@ import { Mission } from '../models/mission';
       border-radius: 18px;
       background: var(--bg-card);
       box-shadow: 0 0 0 1px rgba(73, 210, 255, 0.02), 0 16px 40px rgba(0, 0, 0, 0.22);
+      overflow: hidden;
+    }
+
+    .mission-card::after {
+      content: '';
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(73, 210, 255, 0.35), transparent 82%);
     }
 
     .mission-card--incomplete {

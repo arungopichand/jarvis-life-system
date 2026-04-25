@@ -14,6 +14,9 @@ import { ChatMessage } from '../models/chat-message';
         <div>
           <p class="training-panel__eyebrow">Support</p>
           <h2>JARVIS Assistant</h2>
+          <p class="assistant-panel__subtitle">
+            Ask for the next step, a study push, or a quick decision prompt when momentum drops.
+          </p>
         </div>
       </div>
 
@@ -34,7 +37,7 @@ import { ChatMessage } from '../models/chat-message';
 
       <form class="assistant-form" (ngSubmit)="send.emit()">
         <label class="field">
-          <span>Message</span>
+          <span>Quick Message</span>
           <input
             type="text"
             name="assistantMessage"
@@ -47,7 +50,36 @@ import { ChatMessage } from '../models/chat-message';
         <button type="submit" class="finance-button">Send</button>
       </form>
     </section>
-  `
+  `,
+  styles: [`
+    .assistant-panel__subtitle {
+      margin: 10px 0 0;
+      color: var(--text-muted);
+      max-width: 620px;
+      line-height: 1.6;
+    }
+
+    .assistant-history {
+      max-height: 380px;
+    }
+
+    .chat-message {
+      max-width: min(100%, 720px);
+    }
+
+    .chat-message--assistant {
+      background: linear-gradient(180deg, rgba(11, 28, 47, 0.94), rgba(9, 21, 37, 0.94));
+    }
+
+    .chat-message--user {
+      border-color: rgba(122, 246, 197, 0.16);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    }
+
+    .assistant-form .field {
+      margin: 0;
+    }
+  `]
 })
 export class JarvisAssistantComponent {
   @Input({ required: true }) chatHistory!: ChatMessage[];

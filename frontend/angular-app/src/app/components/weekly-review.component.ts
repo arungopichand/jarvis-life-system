@@ -13,6 +13,9 @@ import { WeeklyStats } from '../models/weekly-stats';
         <div>
           <p class="review-panel__eyebrow">Reflection</p>
           <h2>Weekly Review</h2>
+          <p class="review-panel__subtitle">
+            A compact view of consistency, completion, and spending across the week.
+          </p>
         </div>
       </div>
 
@@ -66,7 +69,34 @@ import { WeeklyStats } from '../models/weekly-stats';
         </table>
       </div>
     </section>
-  `
+  `,
+  styles: [`
+    .review-panel__subtitle {
+      margin: 10px 0 0;
+      color: var(--text-muted);
+      max-width: 560px;
+      line-height: 1.6;
+    }
+
+    .review-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .review-card::after {
+      content: '';
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(73, 210, 255, 0.4), transparent 85%);
+    }
+
+    .review-table td:first-child {
+      color: #cfe5f2;
+      white-space: nowrap;
+    }
+  `]
 })
 export class WeeklyReviewComponent {
   @Input({ required: true }) weeklyStats!: WeeklyStats[];

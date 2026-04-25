@@ -1,11 +1,21 @@
 <main class="dashboard-shell">
   <section class="dashboard-panel">
     <header class="hero">
-      <p class="hero__eyebrow">Mission Control</p>
-      <h1>{{ title }}</h1>
-      <p class="hero__subtitle">
-        One clear next action. Complete missions and build momentum today.
-      </p>
+      <div class="hero__content">
+        <div class="hero__copy">
+          <p class="hero__eyebrow">Mission Control</p>
+          <h1>{{ title }}</h1>
+          <p class="hero__subtitle">
+            A cleaner command center for daily missions, weekly review, money tracking, and focused next actions.
+          </p>
+        </div>
+
+        <div class="hero__status">
+          <span class="hero__status-label">System Status</span>
+          <strong>Online</strong>
+          <span>{{ completedMissionsToday }}/{{ missions.length }} missions completed today</span>
+        </div>
+      </div>
     </header>
 
     <section class="demo-banner">

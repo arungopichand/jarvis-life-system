@@ -14,6 +14,9 @@ import { Expense } from '../models/expense';
         <div>
           <p class="finance-panel__eyebrow">Money</p>
           <h2>Finance Lab</h2>
+          <p class="finance-panel__subtitle">
+            Track spending fast, keep categories tidy, and make the daily total easier to review.
+          </p>
         </div>
 
         <div class="finance-panel__total">
@@ -90,7 +93,29 @@ import { Expense } from '../models/expense';
         }
       </div>
     </section>
-  `
+  `,
+  styles: [`
+    .finance-panel__subtitle {
+      margin: 10px 0 0;
+      color: var(--text-muted);
+      max-width: 560px;
+      line-height: 1.6;
+    }
+
+    .expense-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .expense-card::after {
+      content: '';
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(73, 210, 255, 0.32), transparent 82%);
+    }
+  `]
 })
 export class FinanceLabComponent {
   @Input({ required: true }) expenses!: Expense[];

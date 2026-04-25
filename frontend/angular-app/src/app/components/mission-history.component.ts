@@ -178,11 +178,22 @@ import { MissionService } from '../services/mission.service';
     }
 
     .history-card {
+      position: relative;
       border: 1px solid rgba(73, 210, 255, 0.12);
       border-radius: 18px;
       background: rgba(10, 23, 40, 0.88);
       box-shadow: 0 0 0 1px rgba(73, 210, 255, 0.02), 0 16px 40px rgba(0, 0, 0, 0.2);
       overflow: hidden;
+    }
+
+    .history-card::after {
+      content: '';
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(73, 210, 255, 0.35), transparent 82%);
+      pointer-events: none;
     }
 
     .history-card__summary {
@@ -197,6 +208,10 @@ import { MissionService } from '../services/mission.service';
       gap: 16px;
       text-align: left;
       cursor: pointer;
+    }
+
+    .history-card__summary:hover {
+      background: rgba(255, 255, 255, 0.015);
     }
 
     .history-card__summary-main {
