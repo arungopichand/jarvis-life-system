@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { Expense } from './models/expense';
 import { Mission } from './models/mission';
 import { StreakStats } from './models/streak-stats';
+import { WeeklyStats } from './models/weekly-stats';
 import { ExpenseService } from './services/expense.service';
 import { MissionService } from './services/mission.service';
 import { StatsService } from './services/stats.service';
@@ -40,12 +41,14 @@ export class App implements OnInit {
   isLoading = true;
   errorMessage = '';
   financeErrorMessage = '';
-  statsErrorMessage = '';
+  streakStatsErrorMessage = '';
+  weeklyStatsErrorMessage = '';
   nextActionMessage = '';
   streakStats: StreakStats = {
     currentStreak: 0,
     longestStreak: 0
   };
+  weeklyStats: WeeklyStats[] = [];
   englishPromptIndex = 0;
   confidencePromptIndex = 0;
   typingPromptIndex = 0;
@@ -65,6 +68,7 @@ export class App implements OnInit {
     this.loadTodayMissions();
     this.loadTodayExpenses();
     this.loadStreakStats();
+    this.loadWeeklyStats();
   }
 
   // Missions
@@ -95,6 +99,7 @@ export class App implements OnInit {
         );
         this.refreshGuidance();
         this.loadStreakStats();
+        this.loadWeeklyStats();
       },
       error: () => {
         this.errorMessage = 'Could not complete the mission.';
@@ -112,14 +117,27 @@ export class App implements OnInit {
   }
 
   loadStreakStats(): void {
-    this.statsErrorMessage = '';
+    this.streakStatsErrorMessage = '';
 
     this.statsService.getStreakStats().subscribe({
       next: (stats) => {
         this.streakStats = stats;
       },
       error: () => {
-        this.statsErrorMessage = 'Could not load streak stats.';
+        this.streakStatsErrorMessage = 'Could not load streak stats.';
+      }
+    });
+  }
+
+  loadWeeklyStats(): void {
+    this.weeklyStatsErrorMessage = '';
+
+    this.statsService.getWeeklyStats().subscribe({
+      next: (stats) => {
+        this.weeklyStats = stats;
+      },
+      error: () => {
+        this.weeklyStatsErrorMessage = 'Could not load weekly stats.';
       }
     });
   }
@@ -164,6 +182,7 @@ export class App implements OnInit {
       next: () => {
         this.clearExpenseForm();
         this.loadTodayExpenses();
+        this.loadWeeklyStats();
       },
       error: () => {
         this.financeErrorMessage = 'Could not add the expense.';
@@ -183,6 +202,7 @@ export class App implements OnInit {
     this.expenseService.deleteExpense(id).subscribe({
       next: () => {
         this.loadTodayExpenses();
+        this.loadWeeklyStats();
       },
       error: () => {
         this.financeErrorMessage = 'Could not delete the expense.';
@@ -300,6 +320,24 @@ export class App implements OnInit {
     return this.missions.filter((mission) => mission.isCompleted).length;
   }
 
+  get totalCompletedMissionsThisWeek(): number {
+    return this.weeklyStats.reduce((total, day) => total + day.completedMissions, 0);
+  }
+
+  get averageCompletionPercentageThisWeek(): number {
+    if (this.weeklyStats.length === 0) {
+      return 0;
+    }
+
+    const totalPercentage = this.weeklyStats.reduce((total, day) => total + day.completionPercentage, 0);
+
+    return Math.round(totalPercentage / this.weeklyStats.length);
+  }
+
+  get totalSpentThisWeek(): number {
+    return this.weeklyStats.reduce((total, day) => total + day.totalSpent, 0);
+  }
+
   get streakRewardMessage(): string {
     if (this.streakStats.currentStreak === 0) {
       return 'Start your streak today.';
@@ -314,18 +352,6 @@ export class App implements OnInit {
     }
 
     return 'Discipline mode activated.';
-  }
-
-  get weeklyReviewMessage(): string {
-    if (this.dailyCompletionPercentage === 100) {
-      return 'Strong day. Repeat this tomorrow.';
-    }
-
-    if (this.dailyCompletionPercentage >= 50) {
-      return 'Good start. Improve one small thing tomorrow.';
-    }
-
-    return 'Keep it simple tomorrow. Start with one mission.';
   }
 
   // Training Room

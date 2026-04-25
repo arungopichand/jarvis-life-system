@@ -51,8 +51,8 @@
 
       <p class="streak-reward-message">{{ streakRewardMessage }}</p>
 
-      @if (statsErrorMessage) {
-        <p class="error-message streak-panel__error">{{ statsErrorMessage }}</p>
+      @if (streakStatsErrorMessage) {
+        <p class="error-message streak-panel__error">{{ streakStatsErrorMessage }}</p>
       }
     </section>
 
@@ -125,28 +125,52 @@
 
       <div class="review-grid">
         <article class="review-card">
-          <span class="review-card__label">Missions Completed Today</span>
-          <strong class="review-card__value">{{ completedMissionsToday }}</strong>
+          <span class="review-card__label">Completed This Week</span>
+          <strong class="review-card__value">{{ totalCompletedMissionsThisWeek }}</strong>
         </article>
 
         <article class="review-card">
-          <span class="review-card__label">Total Missions Today</span>
-          <strong class="review-card__value">{{ missions.length }}</strong>
+          <span class="review-card__label">Average Completion %</span>
+          <strong class="review-card__value">{{ averageCompletionPercentageThisWeek }}%</strong>
         </article>
 
         <article class="review-card">
-          <span class="review-card__label">Daily Completion %</span>
-          <strong class="review-card__value">{{ dailyCompletionPercentage }}%</strong>
-        </article>
-
-        <article class="review-card">
-          <span class="review-card__label">Total Spent Today</span>
-          <strong class="review-card__value">${{ totalSpentToday.toFixed(2) }}</strong>
+          <span class="review-card__label">Total Spent This Week</span>
+          <strong class="review-card__value">${{ totalSpentThisWeek.toFixed(2) }}</strong>
         </article>
       </div>
 
-      <div class="review-message">
-        <p>{{ weeklyReviewMessage }}</p>
+      @if (weeklyStatsErrorMessage) {
+        <p class="error-message">{{ weeklyStatsErrorMessage }}</p>
+      }
+
+      @if (weeklyStats.length === 0) {
+        <p class="info-message">No weekly stats found yet.</p>
+      }
+
+      <div class="review-table-wrapper">
+        <table class="review-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Total</th>
+              <th>Done</th>
+              <th>Completion</th>
+              <th>Spent</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (day of weeklyStats; track day.date) {
+              <tr>
+                <td>{{ day.date }}</td>
+                <td>{{ day.totalMissions }}</td>
+                <td>{{ day.completedMissions }}</td>
+                <td>{{ day.completionPercentage }}%</td>
+                <td>${{ day.totalSpent.toFixed(2) }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
       </div>
     </section>
 

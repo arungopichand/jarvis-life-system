@@ -78,6 +78,47 @@ public class StatsController : ControllerBase
         });
     }
 
+    [HttpGet("weekly")]
+    public async Task<ActionResult<IEnumerable<WeeklyStatsResponse>>> GetWeekly()
+    {
+        var today = DateTime.Today;
+        var startDate = today.AddDays(-6);
+
+        var missions = await _dbContext.Missions
+            .AsNoTracking()
+            .Where(m => m.MissionDate.Date >= startDate && m.MissionDate.Date <= today)
+            .ToListAsync();
+
+        var expenses = await _dbContext.Expenses
+            .AsNoTracking()
+            .Where(e => e.ExpenseDate.Date >= startDate && e.ExpenseDate.Date <= today)
+            .ToListAsync();
+
+        var weeklyStats = new List<WeeklyStatsResponse>();
+
+        for (var date = startDate; date <= today; date = date.AddDays(1))
+        {
+            var dailyMissions = missions.Where(m => m.MissionDate.Date == date).ToList();
+            var dailyExpenses = expenses.Where(e => e.ExpenseDate.Date == date).ToList();
+
+            var totalMissions = dailyMissions.Count;
+            var completedMissions = dailyMissions.Count(m => m.IsCompleted);
+            var completionPercentage = GetCompletionPercentage(totalMissions, completedMissions);
+            var totalSpent = dailyExpenses.Sum(e => e.Amount);
+
+            weeklyStats.Add(new WeeklyStatsResponse
+            {
+                Date = date.ToString("yyyy-MM-dd"),
+                TotalMissions = totalMissions,
+                CompletedMissions = completedMissions,
+                CompletionPercentage = completionPercentage,
+                TotalSpent = totalSpent
+            });
+        }
+
+        return Ok(weeklyStats);
+    }
+
     private static int GetCurrentStreak(List<DailyMissionResult> dailyResults)
     {
         var today = DateTime.Today;
