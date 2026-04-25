@@ -57,6 +57,8 @@ import { StatsService } from './services/stats.service';
 })
 export class App implements OnInit {
   readonly layoutModes = ['Daily Mode', 'Review Mode', 'Setup Mode'] as const;
+  private xpToastTimeoutId: ReturnType<typeof setTimeout> | null = null;
+  private missionEffectTimeoutId: ReturnType<typeof setTimeout> | null = null;
 
   // Training Room
   private readonly englishPrompts = [
@@ -107,6 +109,8 @@ export class App implements OnInit {
   assistantMessage = '';
   selectedMood: 'Focused' | 'Lazy' | 'Tired' | 'Anxious' | 'Confident' | null = null;
   isFocusSessionComplete = false;
+  xpGainMessage = '';
+  recentlyCompletedMissionId: number | null = null;
   chatHistory: ChatMessage[] = [
     {
       sender: 'assistant',
@@ -203,6 +207,7 @@ export class App implements OnInit {
         this.missions = this.missions.map((mission) =>
           mission.id === id ? updatedMission : mission
         );
+        this.showMissionCompletionFeedback(updatedMission);
         this.loadStreakStats();
         this.loadWeeklyStats();
       },
@@ -544,6 +549,29 @@ export class App implements OnInit {
 
   onFocusTimerCompleted(isComplete: boolean): void {
     this.isFocusSessionComplete = isComplete;
+  }
+
+  private showMissionCompletionFeedback(mission: Mission): void {
+    this.xpGainMessage = `+${mission.xpReward} XP gained`;
+    this.recentlyCompletedMissionId = mission.id;
+
+    if (this.xpToastTimeoutId) {
+      clearTimeout(this.xpToastTimeoutId);
+    }
+
+    if (this.missionEffectTimeoutId) {
+      clearTimeout(this.missionEffectTimeoutId);
+    }
+
+    this.xpToastTimeoutId = setTimeout(() => {
+      this.xpGainMessage = '';
+      this.xpToastTimeoutId = null;
+    }, 2000);
+
+    this.missionEffectTimeoutId = setTimeout(() => {
+      this.recentlyCompletedMissionId = null;
+      this.missionEffectTimeoutId = null;
+    }, 2000);
   }
 
   // JARVIS Assistant

@@ -44,6 +44,7 @@ import { Mission } from '../models/mission';
             [class.mission-card--completed]="mission.isCompleted"
             [class.mission-card--incomplete]="!mission.isCompleted"
             [class.mission-card--focus]="mission.id === focusMissionId"
+            [class.mission-card--celebrate]="mission.id === recentlyCompletedMissionId"
           >
             <div class="mission-card__content">
               <div class="mission-card__top-row">
@@ -182,6 +183,10 @@ import { Mission } from '../models/mission';
       box-shadow: 0 0 0 1px rgba(73, 210, 255, 0.12), 0 0 28px rgba(73, 210, 255, 0.12);
     }
 
+    .mission-card--celebrate {
+      animation: missionCelebrate 1.2s ease;
+    }
+
     .mission-card__content {
       flex: 1;
     }
@@ -264,6 +269,20 @@ import { Mission } from '../models/mission';
       background: linear-gradient(135deg, rgba(116, 240, 167, 0.92), rgba(157, 255, 201, 0.78));
     }
 
+    @keyframes missionCelebrate {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 1px rgba(122, 246, 197, 0.08), 0 0 0 rgba(122, 246, 197, 0);
+      }
+      35% {
+        transform: scale(1.01);
+        box-shadow: 0 0 0 1px rgba(122, 246, 197, 0.2), 0 0 26px rgba(122, 246, 197, 0.18);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
     @media (max-width: 820px) {
       .mission-card {
         flex-direction: column;
@@ -299,6 +318,7 @@ import { Mission } from '../models/mission';
 export class MissionsComponent {
   @Input({ required: true }) missions!: Mission[];
   @Input() focusMissionId: number | null = null;
+  @Input() recentlyCompletedMissionId: number | null = null;
   @Input() isLoading = false;
   @Input() errorMessage = '';
 

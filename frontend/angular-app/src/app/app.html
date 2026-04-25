@@ -24,6 +24,12 @@
       </p>
     </section>
 
+    @if (xpGainMessage) {
+      <div class="xp-feedback-banner" aria-live="polite">
+        {{ xpGainMessage }}
+      </div>
+    }
+
     <section class="mode-switcher">
       <div class="mode-switcher__header">
         <div>
@@ -78,6 +84,7 @@
       <app-missions
         [missions]="missions"
         [focusMissionId]="focusMissionId"
+        [recentlyCompletedMissionId]="recentlyCompletedMissionId"
         [isLoading]="isLoading"
         [errorMessage]="errorMessage"
         (completeMission)="completeMission($event)"

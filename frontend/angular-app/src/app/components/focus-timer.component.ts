@@ -47,7 +47,7 @@ import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
       </div>
 
       @if (showCompleteMessage) {
-        <p class="success-message">
+        <p class="success-message focus-timer-success">
           Focus session complete. Mark one mission done if you completed it.
         </p>
       }
@@ -133,6 +133,28 @@ import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 
     .focus-timer-modes {
       margin-bottom: 16px;
+    }
+
+    .focus-timer-success {
+      margin-top: 16px;
+      border-color: rgba(122, 246, 197, 0.24);
+      background: linear-gradient(90deg, rgba(73, 210, 255, 0.12), rgba(122, 246, 197, 0.14));
+      box-shadow: 0 0 24px rgba(122, 246, 197, 0.12);
+      animation: focusTimerSuccess 1.4s ease;
+    }
+
+    @keyframes focusTimerSuccess {
+      0% {
+        transform: scale(0.99);
+        opacity: 0.7;
+      }
+      35% {
+        transform: scale(1.01);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1);
+      }
     }
 
     @media (max-width: 640px) {

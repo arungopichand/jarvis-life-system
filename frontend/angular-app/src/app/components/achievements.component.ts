@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 
 interface AchievementBadge {
   title: string;
@@ -28,6 +28,7 @@ interface AchievementBadge {
             class="achievement-badge"
             [class.achievement-badge--unlocked]="badge.unlocked"
             [class.achievement-badge--locked]="!badge.unlocked"
+            [class.achievement-badge--new]="highlightedTitles.has(badge.title)"
           >
             <span class="achievement-badge__status">
               {{ badge.unlocked ? 'Unlocked' : 'Locked' }}
@@ -112,6 +113,10 @@ interface AchievementBadge {
       box-shadow: 0 0 0 1px rgba(122, 246, 197, 0.04), 0 16px 40px rgba(0, 0, 0, 0.18);
     }
 
+    .achievement-badge--new {
+      animation: achievementUnlock 1.4s ease;
+    }
+
     .achievement-badge__status {
       color: var(--accent);
       font-size: 0.75rem;
@@ -125,6 +130,20 @@ interface AchievementBadge {
       color: var(--text-main);
       font-size: 1rem;
       line-height: 1.5;
+    }
+
+    @keyframes achievementUnlock {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(122, 246, 197, 0);
+      }
+      35% {
+        transform: translateY(-2px);
+        box-shadow: 0 0 26px rgba(122, 246, 197, 0.18);
+      }
+      100% {
+        transform: scale(1);
+      }
     }
 
     @media (max-width: 1000px) {
@@ -145,6 +164,10 @@ interface AchievementBadge {
   `]
 })
 export class AchievementsComponent {
+  private previousUnlockedTitles = new Set<string>();
+  highlightedTitles = new Set<string>();
+  private highlightTimeoutId: ReturnType<typeof setTimeout> | null = null;
+
   @Input() completedMissionsToday = 0;
   @Input() totalSpentToday = 0;
   @Input() dailySpendingLimit = 0;
@@ -152,6 +175,29 @@ export class AchievementsComponent {
   @Input() morningCompleted = false;
   @Input() nightCompleted = false;
   @Input() currentStreak = 0;
+
+  ngOnChanges(_: SimpleChanges): void {
+    const unlockedTitles = this.badges
+      .filter((badge) => badge.unlocked)
+      .map((badge) => badge.title);
+
+    const newlyUnlockedTitles = unlockedTitles.filter((title) => !this.previousUnlockedTitles.has(title));
+
+    if (newlyUnlockedTitles.length > 0) {
+      this.highlightedTitles = new Set(newlyUnlockedTitles);
+
+      if (this.highlightTimeoutId) {
+        clearTimeout(this.highlightTimeoutId);
+      }
+
+      this.highlightTimeoutId = setTimeout(() => {
+        this.highlightedTitles.clear();
+        this.highlightTimeoutId = null;
+      }, 2200);
+    }
+
+    this.previousUnlockedTitles = new Set(unlockedTitles);
+  }
 
   get badges(): AchievementBadge[] {
     return [
