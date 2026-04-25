@@ -6,6 +6,7 @@ import { SummaryCardsComponent } from './components/summary-cards.component';
 import { UserSettingsComponent } from './components/user-settings.component';
 import { BattlePlanComponent } from './components/battle-plan.component';
 import { MoodCheckInComponent } from './components/mood-check-in.component';
+import { FocusTimerComponent } from './components/focus-timer.component';
 import { DailyChecklistComponent } from './components/daily-checklist.component';
 import { JarvisAssistantComponent } from './components/jarvis-assistant.component';
 import { TrainingRoomComponent } from './components/training-room.component';
@@ -35,6 +36,7 @@ import { StatsService } from './services/stats.service';
     FormsModule,
     BattlePlanComponent,
     MoodCheckInComponent,
+    FocusTimerComponent,
     SummaryCardsComponent,
     UserSettingsComponent,
     DailyChecklistComponent,
