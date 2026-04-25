@@ -9,6 +9,7 @@ import { JarvisAssistantComponent } from './components/jarvis-assistant.componen
 import { TrainingRoomComponent } from './components/training-room.component';
 import { WeeklyReviewComponent } from './components/weekly-review.component';
 import { FinanceLabComponent } from './components/finance-lab.component';
+import { MissionHistoryComponent } from './components/mission-history.component';
 import { MissionTemplatesComponent } from './components/mission-templates.component';
 import { MissionsComponent } from './components/missions.component';
 import { Expense } from './models/expense';
@@ -37,6 +38,7 @@ import { StatsService } from './services/stats.service';
     TrainingRoomComponent,
     WeeklyReviewComponent,
     FinanceLabComponent,
+    MissionHistoryComponent,
     MissionTemplatesComponent,
     MissionsComponent
   ],

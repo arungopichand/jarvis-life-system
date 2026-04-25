@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
+import { MissionHistoryDay } from '../models/mission-history';
 import { Mission } from '../models/mission';
 
 @Injectable({
@@ -13,6 +14,10 @@ export class MissionService {
 
   getTodayMissions(): Observable<Mission[]> {
     return this.http.get<Mission[]>(`${this.apiUrl}/today`);
+  }
+
+  getMissionHistory(days: number): Observable<MissionHistoryDay[]> {
+    return this.http.get<MissionHistoryDay[]>(`${this.apiUrl}/history?days=${days}`);
   }
 
   completeMission(id: number): Observable<Mission> {
