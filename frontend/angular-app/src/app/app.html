@@ -76,6 +76,11 @@
 
       <app-sleep-control />
 
+      <app-wealth-builder
+        [dailySpendingLimit]="userSettings.dailySpendingLimit"
+        [totalSpentToday]="totalSpentToday"
+      />
+
     <app-summary-cards
       [todayXpEarned]="todayXpEarned"
       [totalPossibleXp]="totalPossibleXp"

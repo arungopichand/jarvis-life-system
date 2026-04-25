@@ -22,6 +22,7 @@ import { DailyLifeProtocolComponent } from './components/daily-life-protocol.com
 import { HydrationControlComponent } from './components/hydration-control.component';
 import { DopamineControlComponent } from './components/dopamine-control.component';
 import { SleepControlComponent } from './components/sleep-control.component';
+import { WealthBuilderComponent } from './components/wealth-builder.component';
 import { FounderDisciplineProtocolComponent } from './components/founder-discipline-protocol.component';
 import { ChatMessage } from './models/chat-message';
 import { ChecklistItem } from './models/checklist-item';
@@ -61,6 +62,7 @@ import { StatsService } from './services/stats.service';
     HydrationControlComponent,
     DopamineControlComponent,
     SleepControlComponent,
+    WealthBuilderComponent,
     FounderDisciplineProtocolComponent
   ],
   templateUrl: './app.html',
