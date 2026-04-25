@@ -1,8 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
+import { SummaryCardsComponent } from './components/summary-cards.component';
+import { UserSettingsComponent } from './components/user-settings.component';
+import { DailyChecklistComponent } from './components/daily-checklist.component';
+import { JarvisAssistantComponent } from './components/jarvis-assistant.component';
+import { TrainingRoomComponent } from './components/training-room.component';
+import { WeeklyReviewComponent } from './components/weekly-review.component';
+import { FinanceLabComponent } from './components/finance-lab.component';
+import { MissionsComponent } from './components/missions.component';
 import { Expense } from './models/expense';
+import { ChatMessage } from './models/chat-message';
+import { ChecklistItem } from './models/checklist-item';
 import { DailyLog } from './models/daily-log';
 import { Mission } from './models/mission';
 import { StreakStats } from './models/streak-stats';
@@ -14,21 +24,23 @@ import { MissionService } from './services/mission.service';
 import { SettingsService } from './services/settings.service';
 import { StatsService } from './services/stats.service';
 
-type ChatMessage = {
-  sender: 'user' | 'assistant';
-  text: string;
-};
-
-type ChecklistItem = {
-  label: string;
-  completed: boolean;
-};
-
 @Component({
   selector: 'app-root',
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    SummaryCardsComponent,
+    UserSettingsComponent,
+    DailyChecklistComponent,
+    JarvisAssistantComponent,
+    TrainingRoomComponent,
+    WeeklyReviewComponent,
+    FinanceLabComponent,
+    MissionsComponent
+  ],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrl: './app.scss',
+  encapsulation: ViewEncapsulation.None
 })
 export class App implements OnInit {
   // Training Room

@@ -14,464 +14,76 @@
       </p>
     </section>
 
-    <section class="stats-grid">
-      <article class="stat-card">
-        <span class="stat-card__label">Today XP Earned</span>
-        <strong class="stat-card__value">{{ todayXpEarned }}</strong>
-      </article>
+    <app-summary-cards
+      [todayXpEarned]="todayXpEarned"
+      [totalPossibleXp]="totalPossibleXp"
+      [currentLevel]="currentLevel"
+      [dailyCompletionPercentage]="dailyCompletionPercentage"
+      [streakStats]="streakStats"
+      [streakRewardMessage]="streakRewardMessage"
+      [streakStatsErrorMessage]="streakStatsErrorMessage"
+      [nextActionMessage]="nextActionMessage"
+      (refreshGuidance)="refreshGuidance()"
+    />
 
-      <article class="stat-card">
-        <span class="stat-card__label">Total Possible XP</span>
-        <strong class="stat-card__value">{{ totalPossibleXp }}</strong>
-      </article>
+    <app-user-settings
+      [settings]="userSettings"
+      [successMessage]="settingsSuccessMessage"
+      [errorMessage]="settingsErrorMessage"
+      (save)="saveSettings()"
+    />
 
-      <article class="stat-card">
-        <span class="stat-card__label">Current Level</span>
-        <strong class="stat-card__value">Level {{ currentLevel }}</strong>
-      </article>
+    <app-daily-checklist
+      [morningChecklist]="morningChecklist"
+      [nightChecklist]="nightChecklist"
+      [errorMessage]="dailyLogErrorMessage"
+      (morningChecklistChange)="onMorningChecklistChange()"
+      (nightChecklistChange)="onNightChecklistChange()"
+    />
 
-      <article class="stat-card">
-        <span class="stat-card__label">Daily Completion %</span>
-        <strong class="stat-card__value">{{ dailyCompletionPercentage }}%</strong>
-      </article>
-    </section>
+    <app-jarvis-assistant
+      [chatHistory]="chatHistory"
+      [assistantMessage]="assistantMessage"
+      (assistantMessageChange)="assistantMessage = $event"
+      (send)="sendAssistantMessage()"
+    />
 
-    <section class="streak-panel">
-      <article class="streak-card">
-        <div>
-          <p class="streak-card__label">Current Streak</p>
-          <strong class="streak-card__value">{{ streakStats.currentStreak }} day{{ streakStats.currentStreak === 1 ? '' : 's' }}</strong>
-        </div>
+    <app-training-room
+      [currentEnglishPrompt]="currentEnglishPrompt"
+      [currentConfidencePrompt]="currentConfidencePrompt"
+      [currentTypingPrompt]="currentTypingPrompt"
+      [gymMinutesTarget]="userSettings.gymMinutesTarget"
+      [proteinGramsTarget]="userSettings.proteinGramsTarget"
+      (nextEnglishPrompt)="showNextEnglishPrompt()"
+      (nextConfidencePrompt)="showNextConfidencePrompt()"
+      (nextTypingPrompt)="showNextTypingPrompt()"
+    />
 
-        <div>
-          <p class="streak-card__label">Longest Streak</p>
-          <strong class="streak-card__value">{{ streakStats.longestStreak }} day{{ streakStats.longestStreak === 1 ? '' : 's' }}</strong>
-        </div>
-      </article>
+    <app-weekly-review
+      [weeklyStats]="weeklyStats"
+      [totalCompletedMissionsThisWeek]="totalCompletedMissionsThisWeek"
+      [averageCompletionPercentageThisWeek]="averageCompletionPercentageThisWeek"
+      [totalSpentThisWeek]="totalSpentThisWeek"
+      [errorMessage]="weeklyStatsErrorMessage"
+    />
 
-      <p class="streak-reward-message">{{ streakRewardMessage }}</p>
+    <app-finance-lab
+      [expenses]="expenses"
+      [expenseForm]="expenseForm"
+      [totalSpentToday]="totalSpentToday"
+      [errorMessage]="financeErrorMessage"
+      (expenseFormChange)="expenseForm = $event"
+      (addExpense)="addExpense()"
+      (removeExpense)="removeExpense($event)"
+    />
 
-      @if (streakStatsErrorMessage) {
-        <p class="error-message streak-panel__error">{{ streakStatsErrorMessage }}</p>
-      }
-    </section>
-
-    <section class="guide-panel">
-      <div class="guide-panel__header">
-        <div>
-          <p class="guide-panel__eyebrow">Guidance</p>
-          <h2>JARVIS Next Action</h2>
-        </div>
-
-        <button type="button" class="guide-button" (click)="refreshGuidance()">
-          Refresh Guidance
-        </button>
-      </div>
-
-      <p class="guide-panel__message">{{ nextActionMessage }}</p>
-    </section>
-
-    <section class="finance-panel">
-      <div class="finance-panel__header">
-        <div>
-          <p class="finance-panel__eyebrow">Profile</p>
-          <h2>User Settings</h2>
-        </div>
-      </div>
-
-      <form
-        style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:20px;"
-        (ngSubmit)="saveSettings()"
-      >
-        <label class="field">
-          <span>Daily Spending Limit</span>
-          <input
-            type="number"
-            name="dailySpendingLimit"
-            [(ngModel)]="userSettings.dailySpendingLimit"
-            min="0"
-            step="0.01"
-          />
-        </label>
-
-        <label class="field">
-          <span>Main Skill</span>
-          <input
-            type="text"
-            name="mainSkill"
-            [(ngModel)]="userSettings.mainSkill"
-            placeholder=".NET"
-          />
-        </label>
-
-        <label class="field">
-          <span>Gym Minutes Target</span>
-          <input
-            type="number"
-            name="gymMinutesTarget"
-            [(ngModel)]="userSettings.gymMinutesTarget"
-            min="0"
-          />
-        </label>
-
-        <label class="field">
-          <span>Protein Grams Target</span>
-          <input
-            type="number"
-            name="proteinGramsTarget"
-            [(ngModel)]="userSettings.proteinGramsTarget"
-            min="0"
-          />
-        </label>
-
-        <button type="submit" class="finance-button">Save Settings</button>
-      </form>
-
-      @if (settingsSuccessMessage) {
-        <p class="info-message">{{ settingsSuccessMessage }}</p>
-      }
-
-      @if (settingsErrorMessage) {
-        <p class="error-message">{{ settingsErrorMessage }}</p>
-      }
-    </section>
-
-    <section class="training-panel">
-      <div class="training-panel__header">
-        <div>
-          <p class="training-panel__eyebrow">Routine</p>
-          <h2>Daily Checklist</h2>
-        </div>
-      </div>
-
-      <div class="review-grid">
-        <article class="review-card">
-          <h3>Morning Checklist</h3>
-
-          <div style="display: grid; gap: 12px;">
-            @for (item of morningChecklist; track item.label) {
-              <label style="display: flex; align-items: center; gap: 12px;">
-                <input
-                  type="checkbox"
-                  [(ngModel)]="item.completed"
-                  [ngModelOptions]="{ standalone: true }"
-                  (change)="onMorningChecklistChange()"
-                />
-                <span>{{ item.label }}</span>
-              </label>
-            }
-          </div>
-        </article>
-
-        <article class="review-card">
-          <h3>Night Checklist</h3>
-
-          <div style="display: grid; gap: 12px;">
-            @for (item of nightChecklist; track item.label) {
-              <label style="display: flex; align-items: center; gap: 12px;">
-                <input
-                  type="checkbox"
-                  [(ngModel)]="item.completed"
-                  [ngModelOptions]="{ standalone: true }"
-                  (change)="onNightChecklistChange()"
-                />
-                <span>{{ item.label }}</span>
-              </label>
-            }
-          </div>
-        </article>
-      </div>
-
-      @if (dailyLogErrorMessage) {
-        <p class="error-message">{{ dailyLogErrorMessage }}</p>
-      }
-    </section>
-
-    <section class="training-panel assistant-panel">
-      <div class="training-panel__header">
-        <div>
-          <p class="training-panel__eyebrow">Support</p>
-          <h2>JARVIS Assistant</h2>
-        </div>
-      </div>
-
-      <div class="assistant-history">
-        @for (message of chatHistory; track $index) {
-          <article
-            class="chat-message"
-            [class.chat-message--user]="message.sender === 'user'"
-            [class.chat-message--assistant]="message.sender === 'assistant'"
-          >
-            <span class="chat-message__label">
-              {{ message.sender === 'user' ? 'You' : 'JARVIS' }}
-            </span>
-            <p>{{ message.text }}</p>
-          </article>
-        }
-      </div>
-
-      <form class="assistant-form" (ngSubmit)="sendAssistantMessage()">
-        <label class="field">
-          <span>Message</span>
-          <input
-            type="text"
-            name="assistantMessage"
-            [(ngModel)]="assistantMessage"
-            placeholder="Ask JARVIS what to do next..."
-          />
-        </label>
-
-        <button type="submit" class="finance-button">Send</button>
-      </form>
-    </section>
-
-    <section class="training-panel">
-      <div class="training-panel__header">
-        <div>
-          <p class="training-panel__eyebrow">Skills</p>
-          <h2>Training Room</h2>
-          <p class="hero__subtitle training-panel__subtitle">
-            Gym target: {{ userSettings.gymMinutesTarget }} minutes. Protein target: {{ userSettings.proteinGramsTarget }}g.
-          </p>
-        </div>
-      </div>
-
-      <div class="training-grid">
-        <article class="training-card">
-          <div class="training-card__content">
-            <h3>English Practice</h3>
-            <p>{{ currentEnglishPrompt }}</p>
-          </div>
-
-          <button type="button" class="training-button" (click)="showNextEnglishPrompt()">
-            New Prompt
-          </button>
-        </article>
-
-        <article class="training-card">
-          <div class="training-card__content">
-            <h3>Confidence Challenge</h3>
-            <p>{{ currentConfidencePrompt }}</p>
-          </div>
-
-          <button type="button" class="training-button" (click)="showNextConfidencePrompt()">
-            New Prompt
-          </button>
-        </article>
-
-        <article class="training-card">
-          <div class="training-card__content">
-            <h3>Typing Practice</h3>
-            <p>{{ currentTypingPrompt }}</p>
-          </div>
-
-          <button type="button" class="training-button" (click)="showNextTypingPrompt()">
-            New Prompt
-          </button>
-        </article>
-      </div>
-    </section>
-
-    <section class="review-panel">
-      <div class="review-panel__header">
-        <div>
-          <p class="review-panel__eyebrow">Reflection</p>
-          <h2>Weekly Review</h2>
-        </div>
-      </div>
-
-      <div class="review-grid">
-        <article class="review-card">
-          <span class="review-card__label">Completed This Week</span>
-          <strong class="review-card__value">{{ totalCompletedMissionsThisWeek }}</strong>
-        </article>
-
-        <article class="review-card">
-          <span class="review-card__label">Average Completion %</span>
-          <strong class="review-card__value">{{ averageCompletionPercentageThisWeek }}%</strong>
-        </article>
-
-        <article class="review-card">
-          <span class="review-card__label">Total Spent This Week</span>
-          <strong class="review-card__value">${{ totalSpentThisWeek.toFixed(2) }}</strong>
-        </article>
-      </div>
-
-      @if (weeklyStatsErrorMessage) {
-        <p class="error-message">{{ weeklyStatsErrorMessage }}</p>
-      }
-
-      @if (weeklyStats.length === 0) {
-        <p class="info-message">No weekly stats found yet.</p>
-      }
-
-      <div class="review-table-wrapper">
-        <table class="review-table">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Total</th>
-              <th>Done</th>
-              <th>Completion</th>
-              <th>Spent</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (day of weeklyStats; track day.date) {
-              <tr>
-                <td>{{ day.date }}</td>
-                <td>{{ day.totalMissions }}</td>
-                <td>{{ day.completedMissions }}</td>
-                <td>{{ day.completionPercentage }}%</td>
-                <td>${{ day.totalSpent.toFixed(2) }}</td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <section class="finance-panel">
-      <div class="finance-panel__header">
-        <div>
-          <p class="finance-panel__eyebrow">Money</p>
-          <h2>Finance Lab</h2>
-        </div>
-
-        <div class="finance-panel__total">
-          <span>Total Spent Today</span>
-          <strong>${{ totalSpentToday.toFixed(2) }}</strong>
-        </div>
-      </div>
-
-      <form class="expense-form" (ngSubmit)="addExpense()">
-        <label class="field">
-          <span>Title</span>
-          <input
-            type="text"
-            name="title"
-            [(ngModel)]="expenseForm.title"
-            placeholder="Coffee"
-          />
-        </label>
-
-        <label class="field">
-          <span>Amount</span>
-          <input
-            type="number"
-            name="amount"
-            [(ngModel)]="expenseForm.amount"
-            placeholder="5.99"
-            min="0"
-            step="0.01"
-          />
-        </label>
-
-        <label class="field">
-          <span>Category</span>
-          <input
-            type="text"
-            name="category"
-            [(ngModel)]="expenseForm.category"
-            placeholder="Food"
-          />
-        </label>
-
-        <button type="submit" class="finance-button">Add</button>
-      </form>
-
-      @if (financeErrorMessage) {
-        <p class="error-message">{{ financeErrorMessage }}</p>
-      }
-
-      @if (expenses.length === 0) {
-        <p class="info-message">No expenses logged for today yet.</p>
-      }
-
-      <div class="expense-list">
-        @for (expense of expenses; track expense.id) {
-          <article class="expense-card">
-            <div class="expense-card__content">
-              <div class="expense-card__top-row">
-                <h3>{{ expense.title }}</h3>
-                <span class="expense-card__amount">${{ expense.amount.toFixed(2) }}</span>
-              </div>
-
-              <div class="expense-card__meta">
-                <span>{{ expense.category }}</span>
-              </div>
-            </div>
-
-            <button type="button" class="delete-button" (click)="removeExpense(expense.id)">
-              Delete
-            </button>
-          </article>
-        }
-      </div>
-    </section>
-
-    <section class="missions-panel">
-      <div class="missions-panel__header">
-        <div class="missions-panel__title-group">
-          <h2>Today's Missions</h2>
-          <span class="missions-panel__count">{{ missions.length }} missions</span>
-        </div>
-
-        <button type="button" class="reset-day-button" (click)="resetDay()">
-          Reset Day
-        </button>
-      </div>
-
-      @if (isLoading) {
-        <p class="info-message">Loading missions...</p>
-      }
-
-      @if (errorMessage) {
-        <p class="error-message">{{ errorMessage }}</p>
-      }
-
-      @if (!isLoading && missions.length === 0) {
-        <p class="info-message">No missions found for today.</p>
-      }
-
-      <div class="mission-list">
-        @for (mission of missions; track mission.id) {
-          <article
-            class="mission-card"
-            [class.mission-card--completed]="mission.isCompleted"
-            [class.mission-card--incomplete]="!mission.isCompleted"
-            [class.mission-card--focus]="mission.id === focusMissionId"
-          >
-            <div class="mission-card__content">
-              <div class="mission-card__top-row">
-                <div class="mission-card__heading">
-                  <h3>{{ mission.title }}</h3>
-
-                  @if (mission.id === focusMissionId && !mission.isCompleted) {
-                    <span class="focus-badge">Focus Now</span>
-                  }
-                </div>
-
-                <span class="mission-card__xp">{{ mission.xpReward }} XP</span>
-              </div>
-
-              <div class="mission-card__meta">
-                <span>{{ mission.category }}</span>
-                <span>{{ mission.isCompleted ? 'Completed' : 'In Progress' }}</span>
-              </div>
-            </div>
-
-            <button
-              type="button"
-              class="complete-button"
-              (click)="completeMission(mission.id)"
-              [disabled]="mission.isCompleted"
-            >
-              {{ mission.isCompleted ? 'Completed' : 'Complete' }}
-            </button>
-          </article>
-        }
-      </div>
-    </section>
+    <app-missions
+      [missions]="missions"
+      [focusMissionId]="focusMissionId"
+      [isLoading]="isLoading"
+      [errorMessage]="errorMessage"
+      (completeMission)="completeMission($event)"
+      (resetDay)="resetDay()"
+    />
   </section>
 </main>
