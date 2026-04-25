@@ -12,4 +12,15 @@ public class AppDbContext : DbContext
     public DbSet<Mission> Missions => Set<Mission>();
 
     public DbSet<Expense> Expenses => Set<Expense>();
+
+    public DbSet<DailyLog> DailyLogs => Set<DailyLog>();
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Expense>()
+            .Property(expense => expense.Amount)
+            .HasPrecision(18, 2);
+    }
 }

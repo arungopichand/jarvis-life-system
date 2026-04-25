@@ -1,0 +1,18 @@
+# .NET
+bin/
+obj/
+
+# Angular
+node_modules/
+dist/
+
+# Build temp folders
+build-verify-temp/
+*.log
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db

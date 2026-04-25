@@ -3,9 +3,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { Expense } from './models/expense';
+import { DailyLog } from './models/daily-log';
 import { Mission } from './models/mission';
 import { StreakStats } from './models/streak-stats';
 import { WeeklyStats } from './models/weekly-stats';
+import { DailyLogService } from './services/daily-log.service';
 import { ExpenseService } from './services/expense.service';
 import { MissionService } from './services/mission.service';
 import { StatsService } from './services/stats.service';
@@ -13,6 +15,11 @@ import { StatsService } from './services/stats.service';
 type ChatMessage = {
   sender: 'user' | 'assistant';
   text: string;
+};
+
+type ChecklistItem = {
+  label: string;
+  completed: boolean;
 };
 
 @Component({
@@ -46,9 +53,11 @@ export class App implements OnInit {
   isLoading = true;
   errorMessage = '';
   financeErrorMessage = '';
+  dailyLogErrorMessage = '';
   streakStatsErrorMessage = '';
   weeklyStatsErrorMessage = '';
   nextActionMessage = '';
+  dailyLog: DailyLog | null = null;
   streakStats: StreakStats = {
     currentStreak: 0,
     longestStreak: 0
@@ -64,6 +73,16 @@ export class App implements OnInit {
       text: 'Systems ready. Tell me what is blocking you, and I will suggest the next action.'
     }
   ];
+  morningChecklist: ChecklistItem[] = [
+    { label: 'Open dashboard', completed: false },
+    { label: 'Check Focus Now', completed: false },
+    { label: 'Start first mission', completed: false }
+  ];
+  nightChecklist: ChecklistItem[] = [
+    { label: 'Track expenses', completed: false },
+    { label: 'Review weekly progress', completed: false },
+    { label: 'Ask JARVIS one question', completed: false }
+  ];
   expenseForm = {
     title: '',
     amount: null as number | null,
@@ -71,16 +90,32 @@ export class App implements OnInit {
   };
 
   constructor(
+    private dailyLogService: DailyLogService,
     private missionService: MissionService,
     private expenseService: ExpenseService,
     private statsService: StatsService
   ) {}
 
   ngOnInit(): void {
+    this.loadTodayDailyLog();
     this.loadTodayMissions();
     this.loadTodayExpenses();
     this.loadStreakStats();
     this.loadWeeklyStats();
+  }
+
+  loadTodayDailyLog(): void {
+    this.dailyLogErrorMessage = '';
+
+    this.dailyLogService.getTodayLog().subscribe({
+      next: (dailyLog) => {
+        this.dailyLog = dailyLog;
+        this.applyDailyLogToChecklist();
+      },
+      error: () => {
+        this.dailyLogErrorMessage = 'Could not load today\'s checklist status.';
+      }
+    });
   }
 
   // Missions
@@ -391,6 +426,14 @@ export class App implements OnInit {
     this.typingPromptIndex = (this.typingPromptIndex + 1) % this.typingPrompts.length;
   }
 
+  onMorningChecklistChange(): void {
+    this.updateDailyLogFromChecklist();
+  }
+
+  onNightChecklistChange(): void {
+    this.updateDailyLogFromChecklist();
+  }
+
   // JARVIS Assistant
   sendAssistantMessage(): void {
     const userMessage = this.assistantMessage.trim();
@@ -432,5 +475,39 @@ export class App implements OnInit {
     }
 
     return 'Your next best action is to complete one mission now.';
+  }
+
+  private applyDailyLogToChecklist(): void {
+    const morningCompleted = this.dailyLog?.morningCompleted ?? false;
+    const nightCompleted = this.dailyLog?.nightCompleted ?? false;
+
+    this.setChecklistCompletion(this.morningChecklist, morningCompleted);
+    this.setChecklistCompletion(this.nightChecklist, nightCompleted);
+  }
+
+  private updateDailyLogFromChecklist(): void {
+    const morningCompleted = this.areAllChecklistItemsCompleted(this.morningChecklist);
+    const nightCompleted = this.areAllChecklistItemsCompleted(this.nightChecklist);
+
+    this.dailyLogErrorMessage = '';
+
+    this.dailyLogService.updateDailyLog(morningCompleted, nightCompleted).subscribe({
+      next: (dailyLog) => {
+        this.dailyLog = dailyLog;
+      },
+      error: () => {
+        this.dailyLogErrorMessage = 'Could not save today\'s checklist status.';
+      }
+    });
+  }
+
+  private areAllChecklistItemsCompleted(items: ChecklistItem[]): boolean {
+    return items.every((item) => item.completed);
+  }
+
+  private setChecklistCompletion(items: ChecklistItem[], completed: boolean): void {
+    items.forEach((item) => {
+      item.completed = completed;
+    });
   }
 }

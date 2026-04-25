@@ -39,8 +39,10 @@ app.MapControllers();
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    var logger = scope.ServiceProvider.GetRequiredService<ILoggerFactory>()
+        .CreateLogger("DatabaseInitializer");
 
-    dbContext.Database.EnsureCreated();
+    await DatabaseInitializer.InitializeAsync(dbContext, logger);
 }
 
 app.Run();
