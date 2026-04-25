@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 
 @Component({
   selector: 'app-focus-timer',
@@ -159,6 +159,8 @@ export class FocusTimerComponent implements OnDestroy {
   private readonly defaultMinutes = 25;
   private intervalId: ReturnType<typeof setInterval> | null = null;
 
+  @Output() timerCompletedChange = new EventEmitter<boolean>();
+
   secondsRemaining = this.defaultMinutes * 60;
   isRunning = false;
   showCompleteMessage = false;
@@ -176,6 +178,7 @@ export class FocusTimerComponent implements OnDestroy {
     }
 
     this.showCompleteMessage = false;
+    this.timerCompletedChange.emit(false);
     this.isRunning = true;
 
     this.intervalId = setInterval(() => {
@@ -186,6 +189,7 @@ export class FocusTimerComponent implements OnDestroy {
       if (this.secondsRemaining === 0) {
         this.pauseTimer();
         this.showCompleteMessage = true;
+        this.timerCompletedChange.emit(true);
       }
     }, 1000);
   }
@@ -203,12 +207,14 @@ export class FocusTimerComponent implements OnDestroy {
     this.pauseTimer();
     this.secondsRemaining = this.defaultMinutes * 60;
     this.showCompleteMessage = false;
+    this.timerCompletedChange.emit(false);
   }
 
   setQuickMode(minutes: number): void {
     this.pauseTimer();
     this.secondsRemaining = minutes * 60;
     this.showCompleteMessage = false;
+    this.timerCompletedChange.emit(false);
   }
 
   ngOnDestroy(): void {

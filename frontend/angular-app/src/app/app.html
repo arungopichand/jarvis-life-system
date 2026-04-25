@@ -31,9 +31,8 @@
       [dailyCompletionPercentage]="dailyCompletionPercentage"
       [streakStats]="streakStats"
       [streakRewardMessage]="streakRewardMessage"
+      [guidanceState]="currentGuidanceState"
       [streakStatsErrorMessage]="streakStatsErrorMessage"
-      [nextActionMessage]="nextActionMessage"
-      (refreshGuidance)="refreshGuidance()"
     />
 
     <app-battle-plan
@@ -49,9 +48,14 @@
       [currentEnglishPrompt]="currentEnglishPrompt"
     />
 
-    <app-mood-check-in />
+    <app-mood-check-in
+      [selectedMood]="selectedMood"
+      (selectedMoodChange)="onMoodSelected($event)"
+    />
 
-    <app-focus-timer />
+    <app-focus-timer
+      (timerCompletedChange)="onFocusTimerCompleted($event)"
+    />
 
     <app-user-settings
       [settings]="userSettings"

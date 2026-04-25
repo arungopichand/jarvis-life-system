@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
+import { GuidanceState } from '../models/guidance-state';
 import { StreakStats } from '../models/streak-stats';
 
 @Component({
@@ -55,18 +56,26 @@ import { StreakStats } from '../models/streak-stats';
     </section>
 
     <section class="guide-panel">
-      <div class="guide-panel__header">
+      <div class="guide-panel__header guide-panel__header--stacked">
         <div>
           <p class="guide-panel__eyebrow">Guidance</p>
-          <h2>JARVIS Next Action</h2>
+          <h2>Current Guidance State</h2>
         </div>
-
-        <button type="button" class="guide-button" (click)="refreshGuidance.emit()">
-          Refresh Guidance
-        </button>
       </div>
 
-      <p class="guide-panel__message">{{ nextActionMessage }}</p>
+      <p class="guide-panel__primary-action">{{ guidanceState.primaryAction }}</p>
+
+      <div class="guide-panel__details">
+        <article class="guide-detail-card">
+          <span class="guide-detail-card__label">Secondary Suggestion</span>
+          <p>{{ guidanceState.secondarySuggestion }}</p>
+        </article>
+
+        <article class="guide-detail-card guide-detail-card--warning" [class.guide-detail-card--muted]="!guidanceState.warning">
+          <span class="guide-detail-card__label">Warning</span>
+          <p>{{ guidanceState.warning || 'No warning. Keep moving.' }}</p>
+        </article>
+      </div>
     </section>
   `,
   styles: [`
@@ -125,8 +134,61 @@ import { StreakStats } from '../models/streak-stats';
       background: linear-gradient(90deg, rgba(73, 210, 255, 0.45), transparent 80%);
     }
 
-    .guide-panel__message {
-      font-size: 1.04rem;
+    .guide-panel__header--stacked {
+      margin-bottom: 14px;
+    }
+
+    .guide-panel__primary-action {
+      margin: 0 0 16px;
+      color: var(--text-main);
+      font-size: clamp(1.35rem, 3vw, 2rem);
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .guide-panel__details {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .guide-detail-card {
+      padding: 16px 18px;
+      border: 1px solid rgba(73, 210, 255, 0.12);
+      border-radius: 18px;
+      background: rgba(7, 21, 32, 0.42);
+    }
+
+    .guide-detail-card--warning {
+      border-color: rgba(255, 180, 84, 0.18);
+      background: rgba(255, 180, 84, 0.08);
+    }
+
+    .guide-detail-card--muted {
+      border-color: rgba(73, 210, 255, 0.1);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .guide-detail-card__label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08rem;
+      text-transform: uppercase;
+    }
+
+    .guide-detail-card p {
+      margin: 0;
+      color: var(--text-main);
+      line-height: 1.65;
+    }
+
+    @media (max-width: 820px) {
+      .guide-panel__details {
+        grid-template-columns: 1fr;
+      }
     }
   `]
 })
@@ -137,8 +199,6 @@ export class SummaryCardsComponent {
   @Input({ required: true }) dailyCompletionPercentage!: number;
   @Input({ required: true }) streakStats!: StreakStats;
   @Input({ required: true }) streakRewardMessage!: string;
+  @Input({ required: true }) guidanceState!: GuidanceState;
   @Input() streakStatsErrorMessage = '';
-  @Input() nextActionMessage = '';
-
-  @Output() refreshGuidance = new EventEmitter<void>();
 }

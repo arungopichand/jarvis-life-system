@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 
 import { Mission } from '../models/mission';
 
@@ -26,16 +26,7 @@ interface BattlePlan {
           </p>
         </div>
 
-        <button type="button" class="finance-button battle-plan-button" (click)="generatePlan()">
-          Plan My Day
-        </button>
       </div>
-
-      @if (!plan) {
-        <p class="info-message">
-          Generate a battle plan to see your first move, skill focus, money status, and a small confidence task.
-        </p>
-      }
 
       @if (plan) {
         <div class="battle-plan-grid">
@@ -78,13 +69,7 @@ interface BattlePlan {
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 18px 46px rgba(0, 0, 0, 0.22);
     }
 
-    .battle-plan-panel__header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 16px;
-      margin-bottom: 20px;
-    }
+    .battle-plan-panel__header { margin-bottom: 20px; }
 
     .battle-plan-panel__eyebrow {
       margin: 0 0 8px;
@@ -104,10 +89,6 @@ interface BattlePlan {
       color: var(--text-muted);
       max-width: 620px;
       line-height: 1.6;
-    }
-
-    .battle-plan-button {
-      white-space: nowrap;
     }
 
     .battle-plan-grid {
@@ -161,21 +142,12 @@ interface BattlePlan {
     }
 
     @media (max-width: 820px) {
-      .battle-plan-panel__header {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
       .battle-plan-grid {
         grid-template-columns: 1fr;
       }
 
       .battle-plan-card--wide {
         grid-column: auto;
-      }
-
-      .battle-plan-button {
-        width: 100%;
       }
     }
 
@@ -186,7 +158,7 @@ interface BattlePlan {
     }
   `]
 })
-export class BattlePlanComponent {
+export class BattlePlanComponent implements OnChanges {
   @Input({ required: true }) missions!: Mission[];
   @Input() focusMissionId: number | null = null;
   @Input() mainSkill = '';
@@ -200,7 +172,7 @@ export class BattlePlanComponent {
 
   plan: BattlePlan | null = null;
 
-  generatePlan(): void {
+  ngOnChanges(_: SimpleChanges): void {
     const incompleteMissions = this.missions.filter((mission) => !mission.isCompleted);
     const focusMission = incompleteMissions.find((mission) => mission.id === this.focusMissionId);
     const firstMission = focusMission ?? incompleteMissions[0] ?? null;

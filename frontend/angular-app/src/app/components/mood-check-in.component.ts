@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 type MoodOption = 'Focused' | 'Lazy' | 'Tired' | 'Anxious' | 'Confident';
 
@@ -166,9 +166,11 @@ export class MoodCheckInComponent {
     Confident: 'Take a bold action. Start your hardest mission.'
   };
 
-  selectedMood: MoodOption | null = null;
+  @Input() selectedMood: MoodOption | null = null;
+  @Output() selectedMoodChange = new EventEmitter<MoodOption>();
 
   selectMood(mood: MoodOption): void {
     this.selectedMood = mood;
+    this.selectedMoodChange.emit(mood);
   }
 }

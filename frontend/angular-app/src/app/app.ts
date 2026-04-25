@@ -19,6 +19,7 @@ import { Expense } from './models/expense';
 import { ChatMessage } from './models/chat-message';
 import { ChecklistItem } from './models/checklist-item';
 import { DailyLog } from './models/daily-log';
+import { GuidanceState } from './models/guidance-state';
 import { Mission } from './models/mission';
 import { StreakStats } from './models/streak-stats';
 import { UserSettings } from './models/user-settings';
@@ -82,7 +83,6 @@ export class App implements OnInit {
   settingsSuccessMessage = '';
   streakStatsErrorMessage = '';
   weeklyStatsErrorMessage = '';
-  nextActionMessage = '';
   dailyLog: DailyLog | null = null;
   userSettings: UserSettings = {
     id: 0,
@@ -100,6 +100,8 @@ export class App implements OnInit {
   confidencePromptIndex = 0;
   typingPromptIndex = 0;
   assistantMessage = '';
+  selectedMood: 'Focused' | 'Lazy' | 'Tired' | 'Anxious' | 'Confident' | null = null;
+  isFocusSessionComplete = false;
   chatHistory: ChatMessage[] = [
     {
       sender: 'assistant',
@@ -146,7 +148,6 @@ export class App implements OnInit {
     this.settingsService.getSettings().subscribe({
       next: (settings) => {
         this.userSettings = settings;
-        this.refreshGuidance();
       },
       error: () => {
         this.settingsErrorMessage = 'Could not load user settings.';
@@ -176,7 +177,6 @@ export class App implements OnInit {
     this.missionService.getTodayMissions().subscribe({
       next: (missions) => {
         this.missions = missions;
-        this.refreshGuidance();
         this.isLoading = false;
       },
       error: () => {
@@ -194,7 +194,6 @@ export class App implements OnInit {
         this.missions = this.missions.map((mission) =>
           mission.id === id ? updatedMission : mission
         );
-        this.refreshGuidance();
         this.loadStreakStats();
         this.loadWeeklyStats();
       },
@@ -209,8 +208,6 @@ export class App implements OnInit {
       ...mission,
       isCompleted: false
     }));
-
-    this.refreshGuidance();
   }
 
   loadStreakStats(): void {
@@ -246,7 +243,6 @@ export class App implements OnInit {
     this.expenseService.getTodayExpenses().subscribe({
       next: (expenses) => {
         this.expenses = expenses;
-        this.refreshGuidance();
       },
       error: () => {
         this.financeErrorMessage = 'Could not load today\'s expenses.';
@@ -321,45 +317,6 @@ export class App implements OnInit {
       amount: null,
       category: ''
     };
-  }
-
-  // Guidance
-  refreshGuidance(): void {
-    const completedMissionCount = this.completedMissionsToday;
-    const totalMissionCount = this.missions.length;
-    const trackExpensesMission = this.missions.find((mission) => mission.title === 'Track Expenses');
-    const hasCompletedExpenseTracking = trackExpensesMission?.isCompleted ?? false;
-    const spendingLimit = this.userSettings.dailySpendingLimit;
-    const skillFocusMessage = this.userSettings.mainSkill.trim()
-      ? ` Focus skill: ${this.userSettings.mainSkill}.`
-      : '';
-
-    if (this.totalSpentToday > spendingLimit) {
-      this.nextActionMessage = 'Spending alert. Review today\'s expenses before buying anything else.';
-      return;
-    }
-
-    if (this.totalSpentToday > 0 && !hasCompletedExpenseTracking) {
-      this.nextActionMessage = 'You spent money today. Complete Track Expenses now.';
-      return;
-    }
-
-    if (completedMissionCount === 0) {
-      this.nextActionMessage = 'Start with the easiest mission. Do 5 minutes only.';
-      return;
-    }
-
-    if (totalMissionCount > 0 && completedMissionCount < totalMissionCount) {
-      this.nextActionMessage = `Good progress. Complete one more mission now.${skillFocusMessage}`;
-      return;
-    }
-
-    if (totalMissionCount > 0 && completedMissionCount === totalMissionCount) {
-      this.nextActionMessage = 'Excellent. Daily mission complete. Review your expenses and rest.';
-      return;
-    }
-
-    this.nextActionMessage = 'Start with the easiest mission. Do 5 minutes only.';
   }
 
   // Weekly Review
@@ -455,6 +412,73 @@ export class App implements OnInit {
     return 'Discipline mode activated.';
   }
 
+  get currentGuidanceState(): GuidanceState {
+    const incompleteMissions = this.missions.filter((mission) => !mission.isCompleted);
+    const easiestMission = [...incompleteMissions]
+      .sort((left, right) => left.xpReward - right.xpReward)[0];
+    const nextBestMission = incompleteMissions.find((mission) => mission.id === this.focusMissionId)
+      ?? incompleteMissions[0];
+    const hasMorningChecklistDone = this.areAllChecklistItemsCompleted(this.morningChecklist);
+    const hasNightChecklistDone = this.areAllChecklistItemsCompleted(this.nightChecklist);
+    const checklistSuggestion = !hasMorningChecklistDone
+      ? 'Finish your morning checklist to lock in the day.'
+      : !hasNightChecklistDone
+        ? 'Keep your night checklist visible so you can close the day cleanly.'
+        : 'Checklist status is solid. Keep the same rhythm.';
+
+    if (this.selectedMood === 'Lazy') {
+      return {
+        primaryAction: easiestMission
+          ? `Do 5 minutes only on ${easiestMission.title}.`
+          : 'Do 5 minutes only on one small review task.',
+        secondarySuggestion: this.isFocusSessionComplete
+          ? 'Your timer finished. If that block counted, mark one mission done now.'
+          : checklistSuggestion,
+        warning: ''
+      };
+    }
+
+    if (this.totalSpentToday > this.userSettings.dailySpendingLimit) {
+      return {
+        primaryAction: 'Spending limit crossed. Pause extra spending right now.',
+        secondarySuggestion: 'Open Finance Lab, review today\'s expenses, and continue only with low-cost tasks.',
+        warning: `You are over your daily limit by ${Math.abs(this.totalSpentToday - this.userSettings.dailySpendingLimit).toFixed(2)}.`
+      };
+    }
+
+    if (this.completedMissionsToday === 0) {
+      return {
+        primaryAction: easiestMission
+          ? `Start with ${easiestMission.title}. It is the easiest mission to build momentum.`
+          : 'Start with one easy task to create momentum.',
+        secondarySuggestion: this.isFocusSessionComplete
+          ? 'A focus session just ended. Mark one mission done if you made progress.'
+          : checklistSuggestion,
+        warning: ''
+      };
+    }
+
+    if (incompleteMissions.length > 0) {
+      return {
+        primaryAction: nextBestMission
+          ? `Next best mission: ${nextBestMission.title} for ${nextBestMission.xpReward} XP.`
+          : 'Pick the next mission and keep the streak alive.',
+        secondarySuggestion: this.isFocusSessionComplete
+          ? 'Focus session complete. Update one mission if you moved it forward.'
+          : `Keep your skill focus on ${this.userSettings.mainSkill || 'your main skill'} and maintain today\'s rhythm.`,
+        warning: ''
+      };
+    }
+
+    return {
+      primaryAction: 'All missions are complete. Review your progress or rest.',
+      secondarySuggestion: this.isFocusSessionComplete
+        ? 'If the timer block helped, close the loop by reviewing what worked today.'
+        : 'Check Weekly Review, log expenses if needed, and end the day cleanly.',
+      warning: ''
+    };
+  }
+
   // Training Room
   get currentEnglishPrompt(): string {
     return this.englishPrompts[this.englishPromptIndex];
@@ -488,7 +512,6 @@ export class App implements OnInit {
       next: (settings) => {
         this.userSettings = settings;
         this.settingsSuccessMessage = 'Settings saved.';
-        this.refreshGuidance();
       },
       error: () => {
         this.settingsErrorMessage = 'Could not save user settings.';
@@ -497,11 +520,21 @@ export class App implements OnInit {
   }
 
   onMorningChecklistChange(): void {
+    this.isFocusSessionComplete = false;
     this.updateDailyLogFromChecklist();
   }
 
   onNightChecklistChange(): void {
+    this.isFocusSessionComplete = false;
     this.updateDailyLogFromChecklist();
+  }
+
+  onMoodSelected(mood: 'Focused' | 'Lazy' | 'Tired' | 'Anxious' | 'Confident'): void {
+    this.selectedMood = mood;
+  }
+
+  onFocusTimerCompleted(isComplete: boolean): void {
+    this.isFocusSessionComplete = isComplete;
   }
 
   // JARVIS Assistant
