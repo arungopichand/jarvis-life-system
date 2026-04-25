@@ -20,6 +20,8 @@ import { MissionsComponent } from './components/missions.component';
 import { Expense } from './models/expense';
 import { DailyLifeProtocolComponent } from './components/daily-life-protocol.component';
 import { HydrationControlComponent } from './components/hydration-control.component';
+import { DopamineControlComponent } from './components/dopamine-control.component';
+import { SleepControlComponent } from './components/sleep-control.component';
 import { FounderDisciplineProtocolComponent } from './components/founder-discipline-protocol.component';
 import { ChatMessage } from './models/chat-message';
 import { ChecklistItem } from './models/checklist-item';
@@ -57,6 +59,8 @@ import { StatsService } from './services/stats.service';
     MissionsComponent,
     DailyLifeProtocolComponent,
     HydrationControlComponent,
+    DopamineControlComponent,
+    SleepControlComponent,
     FounderDisciplineProtocolComponent
   ],
   templateUrl: './app.html',
