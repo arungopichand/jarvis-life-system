@@ -35,11 +35,11 @@ import { Component, Input } from '@angular/core';
   styles: [`
     .identity-panel {
       padding: 24px;
-      border: 1px solid rgba(73, 210, 255, 0.16);
+      border: 1px solid var(--metal-border);
       border-radius: 24px;
       background:
-        radial-gradient(circle at top right, rgba(73, 210, 255, 0.1), transparent 28%),
-        linear-gradient(180deg, rgba(9, 21, 37, 0.96), rgba(7, 15, 27, 0.98));
+        radial-gradient(circle at top right, rgba(57, 214, 255, 0.1), transparent 28%),
+        linear-gradient(180deg, rgba(18, 22, 30, 0.97), rgba(9, 11, 16, 0.99));
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 18px 46px rgba(0, 0, 0, 0.22);
     }
 
@@ -74,9 +74,9 @@ import { Component, Input } from '@angular/core';
     .identity-card {
       position: relative;
       padding: 18px 20px;
-      border: 1px solid rgba(73, 210, 255, 0.12);
+      border: 1px solid var(--metal-border);
       border-radius: 18px;
-      background: rgba(10, 23, 40, 0.88);
+      background: rgba(18, 22, 29, 0.94);
       box-shadow: 0 0 0 1px rgba(73, 210, 255, 0.02), 0 16px 40px rgba(0, 0, 0, 0.18);
       overflow: hidden;
     }
@@ -87,7 +87,7 @@ import { Component, Input } from '@angular/core';
       inset: 0 auto auto 0;
       width: 100%;
       height: 1px;
-      background: linear-gradient(90deg, rgba(73, 210, 255, 0.36), transparent 82%);
+      background: linear-gradient(90deg, rgba(57, 214, 255, 0.36), transparent 82%);
     }
 
     .identity-card + .identity-card {
@@ -95,8 +95,8 @@ import { Component, Input } from '@angular/core';
     }
 
     .identity-card--boost {
-      border-color: rgba(122, 246, 197, 0.18);
-      background: linear-gradient(180deg, rgba(10, 29, 33, 0.96), rgba(8, 20, 24, 0.98));
+      border-color: rgba(255, 179, 71, 0.24);
+      background: linear-gradient(180deg, rgba(28, 25, 18, 0.98), rgba(20, 17, 12, 0.99));
     }
 
     .identity-card__label {

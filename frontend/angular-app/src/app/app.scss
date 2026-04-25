@@ -1,29 +1,34 @@
 app-root {
-  --bg-panel: rgba(9, 21, 38, 0.88);
-  --bg-card: rgba(12, 29, 50, 0.92);
-  --border-color: rgba(100, 199, 255, 0.18);
-  --glow-color: rgba(73, 210, 255, 0.18);
-  --text-main: #e6f7ff;
-  --text-muted: #91a8bd;
-  --accent: #49d2ff;
-  --accent-strong: #7af6c5;
-  --warning: #ffb454;
-  --shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+  --bg-core: #06080b;
+  --bg-panel: rgba(15, 18, 24, 0.92);
+  --bg-card: rgba(20, 24, 31, 0.96);
+  --arc-cyan: #39d6ff;
+  --reactor-amber: #ffb347;
+  --warning-red: #ff5b5b;
+  --success-green: #42f59e;
+  --metal-border: rgba(142, 152, 168, 0.42);
+  --text-main: #edf6ff;
+  --text-muted: #96a6b7;
+  --accent: var(--arc-cyan);
+  --accent-strong: var(--success-green);
+  --warning: var(--reactor-amber);
+  --border-color: var(--metal-border);
+  --glow-color: rgba(57, 214, 255, 0.2);
+  --shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
 
   display: block;
   min-height: 100vh;
   color: var(--text-main);
   background:
-    radial-gradient(circle at top, rgba(73, 210, 255, 0.16), transparent 28%),
-    radial-gradient(circle at right, rgba(122, 246, 197, 0.08), transparent 24%),
-    linear-gradient(180deg, #030813 0%, #07111f 50%, #030813 100%);
-  font-family: "Segoe UI Variable", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    radial-gradient(circle at top, rgba(57, 214, 255, 0.16), transparent 28%),
+    radial-gradient(circle at 85% 18%, rgba(255, 179, 71, 0.14), transparent 22%),
+    linear-gradient(180deg, #020304 0%, #0a0d11 48%, #050607 100%);
+  font-family: "Bahnschrift", "Segoe UI Variable", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 * {
   box-sizing: border-box;
 }
-
 .dashboard-shell {
   min-height: 100vh;
   padding: 28px 18px 40px;
@@ -36,7 +41,7 @@ app-root {
   border: 1px solid var(--border-color);
   border-radius: 28px;
   background:
-    linear-gradient(180deg, rgba(10, 21, 38, 0.94), rgba(7, 15, 28, 0.96)),
+    linear-gradient(180deg, rgba(20, 24, 31, 0.97), rgba(10, 12, 16, 0.98)),
     var(--bg-panel);
   box-shadow: var(--shadow);
   backdrop-filter: blur(16px);
@@ -86,9 +91,9 @@ app-root {
   gap: 6px;
   min-width: 220px;
   padding: 16px 18px;
-  border: 1px solid rgba(73, 210, 255, 0.16);
+  border: 1px solid var(--metal-border);
   border-radius: 20px;
-  background: linear-gradient(180deg, rgba(11, 24, 42, 0.9), rgba(8, 17, 30, 0.94));
+  background: linear-gradient(180deg, rgba(17, 22, 30, 0.94), rgba(10, 13, 18, 0.98));
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
@@ -100,7 +105,7 @@ app-root {
 }
 
 .hero__status strong {
-  color: var(--accent-strong);
+  color: var(--success-green);
   font-size: 1.1rem;
 }
 
@@ -113,9 +118,9 @@ app-root {
 .demo-banner {
   margin-bottom: 20px;
   padding: 14px 18px;
-  border: 1px solid rgba(73, 210, 255, 0.16);
+  border: 1px solid var(--metal-border);
   border-radius: 18px;
-  background: linear-gradient(90deg, rgba(73, 210, 255, 0.07), rgba(122, 246, 197, 0.04));
+  background: linear-gradient(90deg, rgba(57, 214, 255, 0.07), rgba(255, 179, 71, 0.06));
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
@@ -129,14 +134,14 @@ app-root {
 .xp-feedback-banner {
   margin-bottom: 18px;
   padding: 12px 16px;
-  border: 1px solid rgba(122, 246, 197, 0.22);
+  border: 1px solid rgba(66, 245, 158, 0.28);
   border-radius: 16px;
-  background: linear-gradient(90deg, rgba(73, 210, 255, 0.14), rgba(122, 246, 197, 0.12));
+  background: linear-gradient(90deg, rgba(57, 214, 255, 0.14), rgba(66, 245, 158, 0.12));
   color: #dffff1;
   font-size: 0.95rem;
   font-weight: 700;
   letter-spacing: 0.03rem;
-  animation: xpBannerIn 220ms ease, xpBannerGlow 2s ease;
+  animation: xpBannerIn 220ms ease;
 }
 
 @keyframes xpBannerIn {
@@ -150,21 +155,12 @@ app-root {
   }
 }
 
-@keyframes xpBannerGlow {
-  0%, 100% {
-    box-shadow: 0 0 0 rgba(122, 246, 197, 0);
-  }
-  45% {
-    box-shadow: 0 0 24px rgba(122, 246, 197, 0.14);
-  }
-}
-
 .mode-switcher {
   margin-bottom: 24px;
   padding: 18px 20px;
-  border: 1px solid rgba(73, 210, 255, 0.14);
+  border: 1px solid var(--metal-border);
   border-radius: 22px;
-  background: linear-gradient(180deg, rgba(9, 21, 37, 0.92), rgba(8, 17, 29, 0.96));
+  background: linear-gradient(180deg, rgba(18, 22, 29, 0.94), rgba(9, 12, 17, 0.98));
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
@@ -193,9 +189,9 @@ app-root {
 
 .mode-switcher__button {
   padding: 12px 16px;
-  border: 1px solid rgba(73, 210, 255, 0.2);
+  border: 1px solid rgba(57, 214, 255, 0.2);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.025);
   color: var(--text-main);
   font: inherit;
   font-weight: 600;
@@ -205,14 +201,14 @@ app-root {
 
 .mode-switcher__button:hover {
   transform: translateY(-1px);
-  border-color: rgba(73, 210, 255, 0.45);
-  background: rgba(73, 210, 255, 0.08);
+  border-color: rgba(57, 214, 255, 0.45);
+  background: rgba(57, 214, 255, 0.08);
 }
 
 .mode-switcher__button--active {
-  border-color: rgba(122, 246, 197, 0.3);
-  background: linear-gradient(135deg, rgba(73, 210, 255, 0.18), rgba(122, 246, 197, 0.14));
-  box-shadow: 0 0 0 1px rgba(122, 246, 197, 0.08);
+  border-color: rgba(255, 179, 71, 0.35);
+  background: linear-gradient(135deg, rgba(57, 214, 255, 0.18), rgba(255, 179, 71, 0.16));
+  box-shadow: 0 0 0 1px rgba(255, 179, 71, 0.1);
 }
 
 .stats-grid {
@@ -226,7 +222,7 @@ app-root {
   padding: 20px;
   border: 1px solid var(--border-color);
   border-radius: 20px;
-  background: linear-gradient(180deg, rgba(16, 37, 64, 0.95), rgba(9, 22, 38, 0.95));
+  background: linear-gradient(180deg, rgba(21, 26, 34, 0.97), rgba(13, 16, 22, 0.98));
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
@@ -254,7 +250,7 @@ app-root {
   padding: 20px 24px;
   border: 1px solid var(--border-color);
   border-radius: 20px;
-  background: linear-gradient(90deg, rgba(10, 24, 42, 0.96), rgba(13, 35, 56, 0.94));
+  background: linear-gradient(90deg, rgba(18, 22, 30, 0.98), rgba(22, 27, 36, 0.96));
 }
 
 .streak-card__label {
@@ -272,9 +268,9 @@ app-root {
 .streak-reward-message {
   margin: 12px 0 0;
   padding: 12px 14px;
-  border: 1px solid rgba(73, 210, 255, 0.14);
+  border: 1px solid rgba(255, 179, 71, 0.18);
   border-radius: 14px;
-  background: rgba(73, 210, 255, 0.06);
+  background: rgba(255, 179, 71, 0.08);
   color: var(--text-main);
   line-height: 1.6;
 }
@@ -288,7 +284,7 @@ app-root {
   padding: 24px;
   border: 1px solid var(--border-color);
   border-radius: 24px;
-  background: linear-gradient(135deg, rgba(8, 22, 37, 0.96), rgba(10, 32, 45, 0.92));
+  background: linear-gradient(135deg, rgba(16, 20, 28, 0.98), rgba(15, 25, 31, 0.96));
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
@@ -323,20 +319,19 @@ app-root {
 
 .guide-button {
   padding: 12px 16px;
-  border: 1px solid rgba(73, 210, 255, 0.35);
+  border: 1px solid rgba(57, 214, 255, 0.35);
   border-radius: 14px;
-  background: rgba(73, 210, 255, 0.1);
+  background: rgba(57, 214, 255, 0.1);
   color: var(--text-main);
-  font-size: 0.95rem;
+  font-size: .95rem;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
 }
 
 .guide-button:hover {
   transform: translateY(-1px);
-  border-color: rgba(73, 210, 255, 0.7);
-  background: rgba(73, 210, 255, 0.16);
+  border-color: rgba(57, 214, 255, 0.7);
+  background: rgba(57, 214, 255, 0.16);
 }
 
 .guide-button:focus-visible,
@@ -345,7 +340,7 @@ app-root {
 .delete-button:focus-visible,
 .reset-day-button:focus-visible,
 .complete-button:focus-visible {
-  outline: 2px solid rgba(122, 246, 197, 0.65);
+  outline: 2px solid rgba(57, 214, 255, 0.75);
   outline-offset: 2px;
 }
 
@@ -354,22 +349,22 @@ app-root {
   gap: 12px;
   margin-bottom: 18px;
   padding: 18px;
-  border: 1px solid rgba(73, 210, 255, 0.14);
+  border: 1px solid var(--metal-border);
   border-radius: 20px;
-  background:rgba(7,18,31,.92);
+  background: rgba(10, 12, 17, 0.96);
   overflow-y: auto;
 }
 
 .chat-message {
   padding: 14px 16px;
   border-radius: 18px;
-  border: 1px solid rgba(73, 210, 255, 0.12);
-  background: rgba(12, 29, 50, 0.9);
+  border: 1px solid rgba(57, 214, 255, 0.14);
+  background: rgba(21, 26, 34, 0.96);
 }
 
 .chat-message--user {
   justify-self: end;
-  background: rgba(16, 40, 54, 0.92);
+  background: rgba(26, 29, 34, 0.98);
 }
 
 .chat-message__label {
@@ -398,7 +393,7 @@ app-root {
   padding: 24px;
   border: 1px solid var(--border-color);
   border-radius: 24px;
-  background: linear-gradient(180deg, rgba(12, 21, 40, 0.94), rgba(8, 17, 31, 0.98));
+  background: linear-gradient(180deg, rgba(18, 22, 31, 0.96), rgba(9, 11, 16, 0.99));
 }
 
 .training-panel__header {
@@ -431,9 +426,9 @@ app-root {
   gap: 18px;
   min-height: 220px;
   padding: 20px;
-  border: 1px solid rgba(73, 210, 255, 0.14);
+  border: 1px solid var(--metal-border);
   border-radius: 20px;
-  background: linear-gradient(180deg, rgba(12, 29, 50, 0.96), rgba(9, 22, 38, 0.94));
+  background: linear-gradient(180deg, rgba(22, 27, 35, 0.98), rgba(12, 15, 21, 0.98));
   box-shadow: 0 0 0 1px rgba(73, 210, 255, 0.02), 0 16px 40px rgba(0, 0, 0, 0.18);
 }
 
@@ -451,9 +446,9 @@ app-root {
 .training-button {
   align-self: flex-start;
   padding: 12px 16px;
-  border: 1px solid rgba(73, 210, 255, 0.35);
+  border: 1px solid rgba(255, 179, 71, 0.34);
   border-radius: 14px;
-  background: rgba(73, 210, 255, 0.1);
+  background: linear-gradient(135deg, rgba(255, 179, 71, 0.14), rgba(57, 214, 255, 0.08));
   color: var(--text-main);
   font-size: 0.95rem;
   font-weight: 600;
@@ -463,8 +458,8 @@ app-root {
 
 .training-button:hover {
   transform: translateY(-1px);
-  border-color: rgba(73, 210, 255, 0.7);
-  background: rgba(73, 210, 255, 0.16);
+  border-color: rgba(255, 179, 71, 0.6);
+  background: linear-gradient(135deg, rgba(255, 179, 71, 0.2), rgba(57, 214, 255, 0.12));
 }
 
 .review-panel {
@@ -472,7 +467,7 @@ app-root {
   padding: 24px;
   border: 1px solid var(--border-color);
   border-radius: 24px;
-  background: linear-gradient(180deg, rgba(10, 23, 39, 0.95), rgba(8, 18, 30, 0.98));
+  background: linear-gradient(180deg, rgba(18, 22, 30, 0.97), rgba(9, 12, 17, 0.99));
 }
 
 .review-panel__header {
@@ -501,9 +496,9 @@ app-root {
 
 .review-card {
   padding: 18px;
-  border: 1px solid rgba(73, 210, 255, 0.14);
+  border: 1px solid var(--metal-border);
   border-radius: 18px;
-  background: linear-gradient(180deg, rgba(12, 29, 50, 0.94), rgba(9, 22, 38, 0.92));
+  background: linear-gradient(180deg, rgba(22, 27, 35, 0.98), rgba(12, 15, 21, 0.98));
 }
 
 .review-card__label {
@@ -521,9 +516,9 @@ app-root {
 
 .review-table-wrapper {
   overflow-x: auto;
-  border: 1px solid rgba(73, 210, 255, 0.14);
+  border: 1px solid var(--metal-border);
   border-radius: 18px;
-  background: rgba(73, 210, 255, 0.04);
+  background: rgba(57, 214, 255, 0.04);
 }
 
 .review-table {
@@ -544,7 +539,7 @@ app-root {
   font-size: 0.85rem;
   letter-spacing: 0.04rem;
   text-transform: uppercase;
-  background: rgba(73, 210, 255, 0.06);
+  background: rgba(57, 214, 255, 0.06);
 }
 
 .review-table td {
@@ -560,7 +555,7 @@ app-root {
   padding: 24px;
   border: 1px solid var(--border-color);
   border-radius: 24px;
-  background: linear-gradient(180deg, rgba(10, 21, 36, 0.94), rgba(8, 17, 30, 0.98));
+  background: linear-gradient(180deg, rgba(18, 22, 30, 0.97), rgba(9, 11, 16, 0.99));
 }
 
 .finance-panel__header {
@@ -591,7 +586,7 @@ app-root {
   padding: 12px 16px;
   border: 1px solid var(--border-color);
   border-radius: 16px;
-  background: rgba(73, 210, 255, 0.06);
+  background: rgba(255, 179, 71, 0.08);
 }
 
 .finance-panel__total span {
@@ -625,16 +620,16 @@ app-root {
 .field input {
   width: 100%;
   padding: 12px 14px;
-  border: 1px solid rgba(73, 210, 255, 0.16);
+  border: 1px solid var(--metal-border);
   border-radius: 14px;
-  background: rgba(12, 29, 50, 0.92);
+  background: rgba(19, 22, 28, 0.98);
   color: var(--text-main);
   outline: none;
 }
 
 .field input:focus {
-  border-color: rgba(73, 210, 255, 0.65);
-  box-shadow: 0 0 0 3px rgba(73, 210, 255, 0.12);
+  border-color: rgba(57, 214, 255, 0.68);
+  box-shadow: 0 0 0 3px rgba(57, 214, 255, 0.12);
 }
 
 .field input::placeholder {
@@ -655,14 +650,14 @@ app-root {
 .finance-button {
   align-self: end;
   min-width: 110px;
-  border: 1px solid rgba(122, 246, 197, 0.35);
-  background: linear-gradient(135deg, rgba(73, 210, 255, 0.22), rgba(122, 246, 197, 0.18));
+  border: 1px solid rgba(57, 214, 255, 0.36);
+  background: linear-gradient(135deg, rgba(57, 214, 255, 0.24), rgba(255, 179, 71, 0.18));
 }
 
 .delete-button {
   min-width: 100px;
-  border: 1px solid rgba(255, 132, 132, 0.28);
-  background: rgba(255, 84, 84, 0.12);
+  border: 1px solid rgba(255, 91, 91, 0.34);
+  background: rgba(255, 91, 91, 0.14);
 }
 
 .finance-button:hover,
@@ -681,7 +676,7 @@ app-root {
   align-items: center;
   gap: 20px;
   padding: 18px 20px;
-  border: 1px solid rgba(73, 210, 255, 0.12);
+  border: 1px solid var(--metal-border);
   border-radius: 18px;
   background: var(--bg-card);
   box-shadow: 0 0 0 1px rgba(73, 210, 255, 0.02), 0 16px 40px rgba(0, 0, 0, 0.18);
@@ -726,9 +721,9 @@ app-root {
 
 .reset-day-button {
   padding: 12px 16px;
-  border: 1px solid rgba(73, 210, 255, 0.28);
+  border: 1px solid rgba(255, 179, 71, 0.28);
   border-radius: 14px;
-  background: rgba(73, 210, 255, 0.08);
+  background: rgba(255, 179, 71, 0.08);
   color: var(--text-main);
   font-size: 0.95rem;
   font-weight: 600;
@@ -738,8 +733,8 @@ app-root {
 
 .reset-day-button:hover {
   transform: translateY(-1px);
-  border-color: rgba(73, 210, 255, 0.6);
-  background: rgba(73, 210, 255, 0.14);
+  border-color: rgba(255, 179, 71, 0.6);
+  background: rgba(255, 179, 71, 0.14);
 }
 
 .info-message,
@@ -756,8 +751,8 @@ app-root {
 
 .error-message {
   color: #ffd2d2;
-  background: rgba(255, 84, 84, 0.14);
-  border: 1px solid rgba(255, 84, 84, 0.22);
+  background: rgba(255, 91, 91, 0.14);
+  border: 1px solid rgba(255, 91, 91, 0.28);
 }
 
 @media (max-width: 820px) {
@@ -837,7 +832,4 @@ app-root {
     grid-template-columns: 1fr;
   }
 
-  .hero h1 {
-    line-height: 1.05;
-  }
 }

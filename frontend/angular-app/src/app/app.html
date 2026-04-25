@@ -53,6 +53,12 @@
     </section>
 
     @if (selectedLayoutMode === 'Daily Mode') {
+      <app-founder-discipline-protocol
+        [isDisciplineModeActive]="isDisciplineModeActive"
+        [disciplineModeMessage]="disciplineModeMessage"
+        (activateDisciplineMode)="activateDisciplineMode()"
+      />
+
     <app-summary-cards
       [todayXpEarned]="todayXpEarned"
       [totalPossibleXp]="totalPossibleXp"

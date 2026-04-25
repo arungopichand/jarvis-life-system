@@ -56,11 +56,11 @@ import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
   styles: [`
     .focus-timer-panel {
       padding: 24px;
-      border: 1px solid rgba(73, 210, 255, 0.16);
+      border: 1px solid var(--metal-border);
       border-radius: 24px;
       background:
-        radial-gradient(circle at top right, rgba(122, 246, 197, 0.08), transparent 28%),
-        linear-gradient(180deg, rgba(9, 21, 37, 0.96), rgba(7, 15, 27, 0.98));
+        radial-gradient(circle at top right, rgba(255, 179, 71, 0.1), transparent 28%),
+        linear-gradient(180deg, rgba(18, 22, 30, 0.97), rgba(9, 11, 16, 0.99));
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 18px 46px rgba(0, 0, 0, 0.22);
     }
 
@@ -92,9 +92,9 @@ import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
       position: relative;
       margin-bottom: 18px;
       padding: 22px 20px;
-      border: 1px solid rgba(73, 210, 255, 0.12);
+      border: 1px solid var(--metal-border);
       border-radius: 20px;
-      background: rgba(10, 23, 40, 0.88);
+      background: rgba(18, 22, 29, 0.94);
       box-shadow: 0 0 0 1px rgba(73, 210, 255, 0.02), 0 16px 40px rgba(0, 0, 0, 0.18);
       overflow: hidden;
       text-align: center;
@@ -106,7 +106,7 @@ import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
       inset: 0 auto auto 0;
       width: 100%;
       height: 1px;
-      background: linear-gradient(90deg, rgba(73, 210, 255, 0.36), transparent 82%);
+      background: linear-gradient(90deg, rgba(57, 214, 255, 0.36), transparent 82%);
     }
 
     .focus-timer-display__label {
@@ -119,7 +119,7 @@ import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
     }
 
     .focus-timer-display strong {
-      color: var(--accent-strong);
+      color: var(--reactor-amber);
       font-size: clamp(2.2rem, 8vw, 3.8rem);
       letter-spacing: 0.08rem;
     }
@@ -137,9 +137,9 @@ import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 
     .focus-timer-success {
       margin-top: 16px;
-      border-color: rgba(122, 246, 197, 0.24);
-      background: linear-gradient(90deg, rgba(73, 210, 255, 0.12), rgba(122, 246, 197, 0.14));
-      box-shadow: 0 0 24px rgba(122, 246, 197, 0.12);
+      border-color: rgba(66, 245, 158, 0.28);
+      background: linear-gradient(90deg, rgba(57, 214, 255, 0.12), rgba(66, 245, 158, 0.14));
+      box-shadow: 0 0 24px rgba(66, 245, 158, 0.12);
       animation: focusTimerSuccess 1.4s ease;
     }
 

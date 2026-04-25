@@ -1,1 +1,28 @@
-/* You can add global styles to this file, and also import other style files */
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at top, rgba(57, 214, 255, 0.1), transparent 28%),
+    linear-gradient(180deg, #020304 0%, #06080b 55%, #030405 100%);
+  color: #edf6ff;
+}
+
+.success-message {
+  margin: 0 0 16px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  color: #eafff5;
+  background: rgba(66, 245, 158, 0.12);
+  border: 1px solid rgba(66, 245, 158, 0.28);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}

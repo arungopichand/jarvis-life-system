@@ -18,6 +18,7 @@ import { MissionHistoryComponent } from './components/mission-history.component'
 import { MissionTemplatesComponent } from './components/mission-templates.component';
 import { MissionsComponent } from './components/missions.component';
 import { Expense } from './models/expense';
+import { FounderDisciplineProtocolComponent } from './components/founder-discipline-protocol.component';
 import { ChatMessage } from './models/chat-message';
 import { ChecklistItem } from './models/checklist-item';
 import { DailyLog } from './models/daily-log';
@@ -51,7 +52,8 @@ import { StatsService } from './services/stats.service';
     FinanceLabComponent,
     MissionHistoryComponent,
     MissionTemplatesComponent,
-    MissionsComponent
+    MissionsComponent,
+    FounderDisciplineProtocolComponent
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss',
@@ -84,6 +86,7 @@ export class App implements OnInit {
   selectedLayoutMode: typeof this.layoutModes[number] = 'Daily Mode';
   missions: Mission[] = [];
   expenses: Expense[] = [];
+  isDisciplineModeActive = false;
   isLoading = true;
   errorMessage = '';
   financeErrorMessage = '';
@@ -109,6 +112,7 @@ export class App implements OnInit {
   confidencePromptIndex = 0;
   typingPromptIndex = 0;
   assistantMessage = '';
+  disciplineModeMessage = '';
   selectedMood: 'Focused' | 'Lazy' | 'Tired' | 'Anxious' | 'Confident' | null = null;
   isFocusSessionComplete = false;
   xpGainMessage = '';
@@ -154,6 +158,20 @@ export class App implements OnInit {
 
   setLayoutMode(mode: typeof this.layoutModes[number]): void {
     this.selectedLayoutMode = mode;
+  }
+
+  activateDisciplineMode(): void {
+    this.isDisciplineModeActive = true;
+    this.selectedMood = 'Focused';
+    this.disciplineModeMessage = 'Discipline Mode activated. Execute the next mission. No negotiation.';
+
+    const latestAssistantMessage = this.chatHistory.at(-1);
+    if (latestAssistantMessage?.text !== this.disciplineModeMessage) {
+      this.chatHistory.push({
+        sender: 'assistant',
+        text: this.disciplineModeMessage
+      });
+    }
   }
 
   loadSettings(): void {
@@ -469,8 +487,10 @@ export class App implements OnInit {
         ? 'Keep your night checklist visible so you can close the day cleanly.'
         : 'Checklist status is solid. Keep the same rhythm.';
 
+    let guidanceState: GuidanceState;
+
     if (this.selectedMood === 'Lazy') {
-      return {
+      guidanceState = {
         primaryAction: easiestMission
           ? `Do 5 minutes only on ${easiestMission.title}.`
           : 'Do 5 minutes only on one small review task.',
@@ -479,18 +499,14 @@ export class App implements OnInit {
           : checklistSuggestion,
         warning: ''
       };
-    }
-
-    if (this.totalSpentToday > this.userSettings.dailySpendingLimit) {
-      return {
+    } else if (this.totalSpentToday > this.userSettings.dailySpendingLimit) {
+      guidanceState = {
         primaryAction: 'Spending limit crossed. Pause extra spending right now.',
         secondarySuggestion: 'Open Finance Lab, review today\'s expenses, and continue only with low-cost tasks.',
         warning: `You are over your daily limit by ${Math.abs(this.totalSpentToday - this.userSettings.dailySpendingLimit).toFixed(2)}.`
       };
-    }
-
-    if (this.completedMissionsToday === 0) {
-      return {
+    } else if (this.completedMissionsToday === 0) {
+      guidanceState = {
         primaryAction: easiestMission
           ? `Start with ${easiestMission.title}. It is the easiest mission to build momentum.`
           : 'Start with one easy task to create momentum.',
@@ -499,10 +515,8 @@ export class App implements OnInit {
           : checklistSuggestion,
         warning: ''
       };
-    }
-
-    if (incompleteMissions.length > 0) {
-      return {
+    } else if (incompleteMissions.length > 0) {
+      guidanceState = {
         primaryAction: nextBestMission
           ? `Next best mission: ${nextBestMission.title} for ${nextBestMission.xpReward} XP.`
           : 'Pick the next mission and keep the streak alive.',
@@ -511,15 +525,19 @@ export class App implements OnInit {
           : `Keep your skill focus on ${this.userSettings.mainSkill || 'your main skill'} and maintain today\'s rhythm.`,
         warning: ''
       };
+    } else {
+      guidanceState = {
+        primaryAction: 'All missions are complete. Review your progress or rest.',
+        secondarySuggestion: this.isFocusSessionComplete
+          ? 'If the timer block helped, close the loop by reviewing what worked today.'
+          : 'Check Weekly Review, log expenses if needed, and end the day cleanly.',
+        warning: ''
+      };
     }
 
-    return {
-      primaryAction: 'All missions are complete. Review your progress or rest.',
-      secondarySuggestion: this.isFocusSessionComplete
-        ? 'If the timer block helped, close the loop by reviewing what worked today.'
-        : 'Check Weekly Review, log expenses if needed, and end the day cleanly.',
-      warning: ''
-    };
+    return this.isDisciplineModeActive
+      ? this.applyDisciplineModeTone(guidanceState, nextBestMission)
+      : guidanceState;
   }
 
   // Training Room
@@ -626,28 +644,35 @@ export class App implements OnInit {
 
   private getAssistantReply(message: string): string {
     const normalizedMessage = message.toLowerCase();
+    let reply: string;
 
     if (normalizedMessage.includes('skill') || normalizedMessage.includes('study')) {
-      return `Focus on your current main skill: ${this.userSettings.mainSkill}. Do 25 minutes now.`;
+      reply = `Focus on your current main skill: ${this.userSettings.mainSkill}. Do 25 minutes now.`;
+      return this.applyAssistantTone(reply);
     }
 
     if (normalizedMessage.includes('lazy') || normalizedMessage.includes('procrastinate')) {
-      return 'Do 5 minutes only. Start with your Focus Now mission.';
+      reply = 'Do 5 minutes only. Start with your Focus Now mission.';
+      return this.applyAssistantTone(reply);
     }
 
     if (normalizedMessage.includes('money') || normalizedMessage.includes('spend')) {
-      return `Your daily spending limit is ${this.userSettings.dailySpendingLimit}. Check Finance Lab before spending more.`;
+      reply = `Your daily spending limit is ${this.userSettings.dailySpendingLimit}. Check Finance Lab before spending more.`;
+      return this.applyAssistantTone(reply);
     }
 
     if (normalizedMessage.includes('english')) {
-      return 'Go to Training Room and speak for 2 minutes about your day.';
+      reply = 'Go to Training Room and speak for 2 minutes about your day.';
+      return this.applyAssistantTone(reply);
     }
 
     if (normalizedMessage.includes('gym')) {
-      return 'Do not think. Wear your shoes and go for 10 minutes.';
+      reply = 'Do not think. Wear your shoes and go for 10 minutes.';
+      return this.applyAssistantTone(reply);
     }
 
-    return 'Your next best action is to complete one mission now.';
+    reply = 'Your next best action is to complete one mission now.';
+    return this.applyAssistantTone(reply);
   }
 
   private applyDailyLogToChecklist(): void {
@@ -682,5 +707,31 @@ export class App implements OnInit {
     items.forEach((item) => {
       item.completed = completed;
     });
+  }
+
+  private applyDisciplineModeTone(guidanceState: GuidanceState, nextBestMission: Mission | undefined): GuidanceState {
+    const executionTarget = nextBestMission
+      ? `${nextBestMission.title} for ${nextBestMission.xpReward} XP`
+      : 'the next mission block';
+
+    return {
+      primaryAction: nextBestMission
+        ? `Execute ${executionTarget}. Stay sharp, finish the block, and move immediately to the next checkpoint.`
+        : guidanceState.primaryAction,
+      secondarySuggestion: this.isFocusSessionComplete
+        ? 'Timer complete. Log the result, capture the win, and begin the next block without drift.'
+        : 'Use a 25-minute deep-work block, ignore comfort, and measure output by work shipped.',
+      warning: guidanceState.warning
+        ? `Critical check: ${guidanceState.warning}`
+        : 'No active warning. Hold the line, avoid comfort addiction, and keep momentum high.'
+    };
+  }
+
+  private applyAssistantTone(reply: string): string {
+    if (!this.isDisciplineModeActive) {
+      return reply;
+    }
+
+    return `Discipline Mode: ${reply} Execute cleanly and report progress with action, not excuses.`;
   }
 }

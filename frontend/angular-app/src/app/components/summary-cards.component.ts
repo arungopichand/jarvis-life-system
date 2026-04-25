@@ -95,8 +95,8 @@ import { StreakStats } from '../models/streak-stats';
     }
 
     .stat-card--score {
-      border-color: rgba(122, 246, 197, 0.22);
-      background: linear-gradient(135deg, rgba(8, 32, 35, 0.96), rgba(9, 24, 37, 0.94));
+      border-color: rgba(255, 179, 71, 0.3);
+      background: linear-gradient(135deg, rgba(25, 27, 30, 0.98), rgba(19, 28, 33, 0.96));
     }
 
     .stat-card::after {
@@ -105,7 +105,7 @@ import { StreakStats } from '../models/streak-stats';
       inset: 0 auto auto 0;
       width: 100%;
       height: 1px;
-      background: linear-gradient(90deg, rgba(73, 210, 255, 0.55), transparent 78%);
+      background: linear-gradient(90deg, rgba(57, 214, 255, 0.55), transparent 78%);
     }
 
     .stat-card--xp::before,
@@ -116,7 +116,7 @@ import { StreakStats } from '../models/streak-stats';
       width: 88px;
       height: 88px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(73, 210, 255, 0.18), transparent 68%);
+      background: radial-gradient(circle, rgba(57, 214, 255, 0.18), transparent 68%);
       pointer-events: none;
     }
 
@@ -158,7 +158,7 @@ import { StreakStats } from '../models/streak-stats';
       inset: 0 auto auto 0;
       width: 100%;
       height: 1px;
-      background: linear-gradient(90deg, rgba(73, 210, 255, 0.45), transparent 80%);
+      background: linear-gradient(90deg, rgba(57, 214, 255, 0.45), transparent 80%);
     }
 
     .guide-panel__header--stacked {
@@ -181,14 +181,14 @@ import { StreakStats } from '../models/streak-stats';
 
     .guide-detail-card {
       padding: 16px 18px;
-      border: 1px solid rgba(73, 210, 255, 0.12);
+      border: 1px solid var(--metal-border);
       border-radius: 18px;
-      background: rgba(7, 21, 32, 0.42);
+      background: rgba(18, 22, 29, 0.84);
     }
 
     .guide-detail-card--warning {
-      border-color: rgba(255, 180, 84, 0.18);
-      background: rgba(255, 180, 84, 0.08);
+      border-color: rgba(255, 179, 71, 0.28);
+      background: rgba(255, 179, 71, 0.08);
     }
 
     .guide-detail-card--muted {
