@@ -37,11 +37,11 @@ import { WeeklyStats } from '../models/weekly-stats';
       </div>
 
       @if (errorMessage) {
-        <p class="error-message">{{ errorMessage }}</p>
+        <p class="error-message" aria-live="assertive">{{ errorMessage }}</p>
       }
 
       @if (weeklyStats.length === 0) {
-        <p class="info-message">No weekly stats found yet.</p>
+        <p class="info-message" aria-live="polite">No weekly stats yet. Complete today's missions to start your trend line.</p>
       }
 
       <div class="review-table-wrapper">
@@ -89,11 +89,11 @@ import { WeeklyStats } from '../models/weekly-stats';
       inset: 0 auto auto 0;
       width: 100%;
       height: 1px;
-      background: linear-gradient(90deg, rgba(73, 210, 255, 0.4), transparent 85%);
+      background: linear-gradient(90deg, rgba(var(--a), 0.4), transparent 85%);
     }
 
     .review-table td:first-child {
-      color: #cfe5f2;
+      color: var(--text-main);
       white-space: nowrap;
     }
   `]

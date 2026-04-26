@@ -1,229 +1,232 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+
+import { IncomeLog, IncomeMonthSummary } from '../models/income-log';
 
 @Component({
   selector: 'app-wealth-builder',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   template: `
     <section class="wealth-panel">
       <div class="wealth-panel__header">
         <div>
-          <p class="wealth-panel__eyebrow">Money Systems</p>
+          <p class="wealth-panel__eyebrow">Income First</p>
           <h2>Wealth Builder</h2>
           <p class="wealth-panel__subtitle">
-            Keep daily money actions visible, reinforce one wealth principle, and protect spending discipline.
+            Build income momentum, track goal progress, and keep expenses as a secondary control layer.
           </p>
         </div>
 
         <article class="wealth-panel__status-card">
-          <span class="wealth-panel__status-label">Control Status</span>
-          <strong [class.wealth-panel__status-value--warning]="totalSpentToday > dailySpendingLimit">
-            {{ moneyStatus }}
-          </strong>
-          <span>Spent today: {{ totalSpentToday.toFixed(2) }} / {{ dailySpendingLimit.toFixed(2) }}</span>
+          <span class="wealth-panel__status-label">This Month</span>
+          <strong>{{ monthSummary?.totalIncome?.toFixed(2) || '0.00' }}</strong>
+          <span>
+            Goal progress:
+            {{ monthSummary?.goalProgressPercentage?.toFixed(1) || '0.0' }}%
+          </span>
         </article>
       </div>
 
       <div class="wealth-grid">
-        <article class="wealth-card">
-          <span class="wealth-card__label">Daily Money Actions</span>
+        <article class="wealth-card ui-card">
+          <span class="wealth-card__label">Monthly Goals</span>
+          <p>Income goal: {{ monthSummary?.monthlyIncomeGoal?.toFixed(2) || '0.00' }}</p>
+          <p>Savings goal: {{ monthSummary?.savingsGoal?.toFixed(2) || '0.00' }}</p>
+          <p>{{ skillToIncomeAction }}</p>
+          <p>Wealth habit: {{ wealthHabitOfTheDay }}</p>
+        </article>
 
-          <ul class="wealth-list">
-            @for (action of dailyActions; track action) {
-              <li>{{ action }}</li>
+        <article class="wealth-card ui-card">
+          <span class="wealth-card__label">Log Income</span>
+          <form class="income-form" (ngSubmit)="addIncome.emit()">
+            <label class="field">
+              <span>Source</span>
+              <input
+                type="text"
+                name="source"
+                [ngModel]="incomeForm.source"
+                (ngModelChange)="updateField('source', $event)"
+                placeholder="Freelance API work"
+              />
+            </label>
+            <label class="field">
+              <span>Amount</span>
+              <input
+                type="number"
+                name="amount"
+                [ngModel]="incomeForm.amount"
+                (ngModelChange)="updateField('amount', $event)"
+                min="0.01"
+                step="0.01"
+              />
+            </label>
+            <label class="field">
+              <span>Notes</span>
+              <input
+                type="text"
+                name="notes"
+                [ngModel]="incomeForm.notes"
+                (ngModelChange)="updateField('notes', $event)"
+                placeholder="Service delivered in 4 hours"
+              />
+            </label>
+            <button type="submit" class="finance-button" [disabled]="!isFormValid">
+              Add Income
+            </button>
+          </form>
+        </article>
+      </div>
+
+      @if (errorMessage) {
+        <p class="error-message">{{ errorMessage }}</p>
+      }
+
+      @if (acknowledgementMessage) {
+        <p class="wealth-panel__feedback">{{ acknowledgementMessage }}</p>
+      }
+
+      <div class="income-list">
+        @for (entry of recentIncome; track entry.id) {
+          <article class="income-item ui-card ui-accent-line">
+            <div class="income-item__top">
+              <h3>{{ entry.source }}</h3>
+              <span class="ui-chip ui-chip--success">{{ entry.amount.toFixed(2) }}</span>
+            </div>
+            @if (entry.notes) {
+              <p>{{ entry.notes }}</p>
             }
-          </ul>
-        </article>
+            <span class="income-item__time">{{ formatDate(entry.createdAt) }}</span>
+          </article>
+        }
+      </div>
 
-        <article class="wealth-card wealth-card--lesson">
-          <span class="wealth-card__label">Daily Wealth Lesson</span>
-          <p class="wealth-lesson">{{ currentLesson }}</p>
-          <button type="button" class="training-button" (click)="showNewLesson()">
-            New Wealth Lesson
-          </button>
-        </article>
+      <div class="wealth-secondary ui-card">
+        <span class="wealth-card__label">Expense Control (Secondary)</span>
+        <p>
+          Spent today: {{ totalSpentToday.toFixed(2) }} / {{ dailySpendingLimit.toFixed(2) }}
+        </p>
+        <p>{{ moneyStatus }}</p>
       </div>
     </section>
   `,
   styles: [`
-    .wealth-panel {
-      margin-bottom: 24px;
-      padding: 24px;
-      border: 1px solid var(--metal-border);
-      border-radius: 24px;
-      background:
-        radial-gradient(circle at top right, rgba(255, 179, 71, 0.12), transparent 28%),
-        radial-gradient(circle at left, rgba(57, 214, 255, 0.1), transparent 24%),
-        linear-gradient(180deg, rgba(18, 22, 30, 0.97), rgba(9, 11, 16, 0.99));
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 18px 46px rgba(0, 0, 0, 0.22);
-    }
-
-    .wealth-panel__header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 18px;
-      margin-bottom: 20px;
-    }
-
-    .wealth-panel__eyebrow {
-      margin: 0 0 8px;
-      color: var(--arc-cyan);
-      font-size: 0.78rem;
-      letter-spacing: 0.18rem;
-      text-transform: uppercase;
-    }
-
-    .wealth-panel__header h2 {
-      margin: 0;
-      font-size: 1.5rem;
-    }
-
-    .wealth-panel__subtitle {
-      margin: 10px 0 0;
+    .wealth-panel__feedback {
+      margin: 0 0 12px;
       color: var(--text-muted);
-      max-width: 620px;
-      line-height: 1.6;
-    }
-
-    .wealth-panel__status-card {
-      display: grid;
-      gap: 6px;
-      min-width: 260px;
-      padding: 14px 16px;
-      border: 1px solid var(--metal-border);
-      border-radius: 18px;
-      background: rgba(17, 21, 27, 0.88);
-    }
-
-    .wealth-panel__status-label {
-      color: var(--text-muted);
-      font-size: 0.76rem;
-      letter-spacing: 0.12rem;
-      text-transform: uppercase;
-    }
-
-    .wealth-panel__status-card strong {
-      color: var(--success-green);
-      font-size: 1rem;
-    }
-
-    .wealth-panel__status-value--warning {
-      color: var(--warning-red) !important;
+      font-size: 0.88rem;
+      line-height: 1.5;
     }
 
     .wealth-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
+      margin-bottom: 16px;
     }
 
     .wealth-card {
-      padding: 18px 20px;
-      border: 1px solid var(--metal-border);
-      border-radius: 18px;
-      background: rgba(18, 22, 29, 0.9);
+      padding: 16px 18px;
+      box-shadow: none;
     }
 
-    .wealth-card--lesson {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      justify-content: space-between;
+    .wealth-card p {
+      margin: 0 0 10px;
+      line-height: 1.55;
+      color: var(--text-muted);
     }
 
-    .wealth-card__label {
-      display: block;
-      margin-bottom: 12px;
-      color: var(--reactor-amber);
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.08rem;
-      text-transform: uppercase;
-    }
-
-    .wealth-list {
+    .income-form {
       display: grid;
       gap: 10px;
+    }
+
+    .income-list {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .income-item {
+      padding: 14px 16px;
+      box-shadow: none;
+    }
+
+    .income-item__top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .income-item__top h3 {
       margin: 0;
-      padding-left: 18px;
-      color: var(--text-main);
+      font-size: 1rem;
     }
 
-    .wealth-list li {
-      line-height: 1.65;
+    .income-item p {
+      margin: 0 0 8px;
+      color: var(--text-muted);
+      line-height: 1.55;
     }
 
-    .wealth-list li::marker {
-      color: var(--arc-cyan);
+    .income-item__time {
+      color: var(--text-muted);
+      font-size: 0.82rem;
     }
 
-    .wealth-lesson {
-      margin: 0;
-      color: var(--text-main);
-      font-size: 1.02rem;
-      line-height: 1.7;
+    .wealth-secondary {
+      padding: 14px 16px;
+      box-shadow: none;
     }
 
-    @media (max-width: 820px) {
-      .wealth-panel__header {
-        flex-direction: column;
-      }
-
-      .wealth-panel__status-card {
-        min-width: 0;
-        width: 100%;
-      }
-
-      .wealth-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .wealth-panel {
-        padding: 18px;
-      }
-
-      .wealth-card--lesson .training-button {
-        width: 100%;
-      }
+    .wealth-secondary p {
+      margin: 0 0 8px;
+      color: var(--text-muted);
+      line-height: 1.55;
     }
   `]
 })
 export class WealthBuilderComponent {
-  private readonly lessons = [
-    'Assets put money in your pocket.',
-    'Liabilities take money out of your pocket.',
-    'Save first, spend after.',
-    'Skill growth increases earning power.',
-    'Avoid lifestyle inflation.'
-  ];
-
   @Input() dailySpendingLimit = 0;
   @Input() totalSpentToday = 0;
+  @Input() monthSummary: IncomeMonthSummary | null = null;
+  @Input() recentIncome: IncomeLog[] = [];
+  @Input() incomeForm: { source: string; amount: number | null; notes: string } = {
+    source: '',
+    amount: null,
+    notes: ''
+  };
+  @Input() errorMessage = '';
+  @Input() acknowledgementMessage = '';
+  @Input() skillToIncomeAction = 'Turn one skill rep into a monetizable portfolio artifact this week.';
+  @Input() wealthHabitOfTheDay = 'Log income signals daily and review weekly progress every Sunday.';
 
-  lessonIndex = 0;
+  @Output() incomeFormChange = new EventEmitter<{ source: string; amount: number | null; notes: string }>();
+  @Output() addIncome = new EventEmitter<void>();
 
-  readonly dailyActions = [
-    'Track today\'s expenses',
-    'Stay under daily spending limit',
-    'Learn one wealth concept',
-    'Avoid impulse buying'
-  ];
-
-  get currentLesson(): string {
-    return this.lessons[this.lessonIndex];
+  get isFormValid(): boolean {
+    return Boolean(this.incomeForm.source.trim() && this.incomeForm.amount && this.incomeForm.amount > 0);
   }
 
   get moneyStatus(): string {
     return this.totalSpentToday <= this.dailySpendingLimit
-      ? 'Money control active.'
-      : 'Spending limit exceeded. Pause purchases.';
+      ? 'Expense control is within target.'
+      : 'Expense limit exceeded. Keep spending intentional for the rest of the day.';
   }
 
-  showNewLesson(): void {
-    this.lessonIndex = (this.lessonIndex + 1) % this.lessons.length;
+  updateField(key: 'source' | 'amount' | 'notes', value: string | number | null): void {
+    this.incomeFormChange.emit({
+      ...this.incomeForm,
+      [key]: key === 'amount' && typeof value === 'string' ? Number.parseFloat(value) : value
+    });
+  }
+
+  formatDate(value: string): string {
+    return new Date(value).toLocaleString(undefined, {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   }
 }

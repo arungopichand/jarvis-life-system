@@ -57,10 +57,10 @@ type EmotionalState = 'Calm' | 'Angry' | 'Sad' | 'Stressed' | 'Overthinking';
       border: 1px solid var(--metal-border);
       border-radius: 24px;
       background:
-        radial-gradient(circle at top right, rgba(57, 214, 255, 0.1), transparent 28%),
-        radial-gradient(circle at left, rgba(255, 179, 71, 0.1), transparent 24%),
-        linear-gradient(180deg, rgba(18, 22, 30, 0.97), rgba(9, 11, 16, 0.99));
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 18px 46px rgba(0, 0, 0, 0.22);
+        radial-gradient(circle at top right, rgba(var(--a), 0.1), transparent 28%),
+        radial-gradient(circle at left, rgba(var(--h), 0.1), transparent 24%),
+        var(--panel-bg-primary);
+      box-shadow: var(--shadow-inset-soft), var(--shadow-elev-strong);
     }
 
     .emotion-panel__header {
@@ -96,9 +96,9 @@ type EmotionalState = 'Calm' | 'Angry' | 'Sad' | 'Stressed' | 'Overthinking';
 
     .emotion-option {
       padding: 12px 16px;
-      border: 1px solid rgba(57, 214, 255, 0.2);
+      border: 1px solid rgba(var(--a), 0.2);
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.03);
+      background: var(--card-bg-muted);
       color: var(--text-main);
       font: inherit;
       font-weight: 600;
@@ -106,9 +106,9 @@ type EmotionalState = 'Calm' | 'Angry' | 'Sad' | 'Stressed' | 'Overthinking';
     }
 
     .emotion-option--active {
-      border-color: rgba(255, 179, 71, 0.3);
-      background: linear-gradient(135deg, rgba(57, 214, 255, 0.18), rgba(255, 179, 71, 0.14));
-      box-shadow: 0 0 0 1px rgba(255, 179, 71, 0.08);
+      border-color: rgba(var(--h), 0.3);
+      background: linear-gradient(135deg, rgba(var(--a), 0.18), rgba(var(--h), 0.14));
+      box-shadow: 0 0 0 1px rgba(var(--h), 0.08);
     }
 
     .emotion-guidance {
@@ -116,7 +116,7 @@ type EmotionalState = 'Calm' | 'Angry' | 'Sad' | 'Stressed' | 'Overthinking';
       padding: 18px 20px;
       border: 1px solid var(--metal-border);
       border-radius: 18px;
-      background: rgba(18, 22, 29, 0.88);
+      background: var(--card-bg);
     }
 
     .emotion-guidance__label {
@@ -145,9 +145,9 @@ type EmotionalState = 'Calm' | 'Angry' | 'Sad' | 'Stressed' | 'Overthinking';
     .emotion-reset-message {
       margin: 0;
       padding: 14px 16px;
-      border: 1px solid rgba(57, 214, 255, 0.26);
+      border: 1px solid rgba(var(--a), 0.26);
       border-radius: 16px;
-      background: linear-gradient(90deg, rgba(57, 214, 255, 0.12), rgba(66, 245, 158, 0.12));
+      background: linear-gradient(90deg, rgba(var(--a), 0.12), rgba(var(--s), 0.12));
       color: var(--text-main);
       font-weight: 600;
       line-height: 1.6;

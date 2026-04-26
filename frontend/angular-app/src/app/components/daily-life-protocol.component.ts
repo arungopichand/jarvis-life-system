@@ -50,10 +50,10 @@ interface ProtocolSection {
       border: 1px solid var(--metal-border);
       border-radius: 26px;
       background:
-        radial-gradient(circle at top right, rgba(57, 214, 255, 0.1), transparent 28%),
-        radial-gradient(circle at left, rgba(255, 179, 71, 0.12), transparent 26%),
-        linear-gradient(180deg, rgba(18, 22, 30, 0.97), rgba(9, 11, 16, 0.99));
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 22px 54px rgba(0, 0, 0, 0.26);
+        radial-gradient(circle at top right, rgba(var(--a), 0.1), transparent 28%),
+        radial-gradient(circle at left, rgba(var(--h), 0.12), transparent 26%),
+        var(--panel-bg-primary);
+      box-shadow: var(--shadow-inset-soft), var(--shadow-elev-deep);
     }
 
     .life-protocol-panel__header {
@@ -91,7 +91,7 @@ interface ProtocolSection {
       padding: 16px 18px;
       border: 1px solid var(--metal-border);
       border-radius: 18px;
-      background: rgba(17, 21, 27, 0.88);
+      background: var(--color-surface-inset);
     }
 
     .life-protocol-status__label {
@@ -121,8 +121,8 @@ interface ProtocolSection {
       padding: 18px 20px;
       border: 1px solid var(--metal-border);
       border-radius: 20px;
-      background: rgba(18, 22, 29, 0.86);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+      background: var(--card-bg);
+      box-shadow: var(--shadow-inset-subtle);
     }
 
     .life-protocol-card__label {

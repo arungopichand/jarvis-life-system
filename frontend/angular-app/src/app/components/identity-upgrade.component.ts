@@ -38,9 +38,9 @@ import { Component, Input } from '@angular/core';
       border: 1px solid var(--metal-border);
       border-radius: 24px;
       background:
-        radial-gradient(circle at top right, rgba(57, 214, 255, 0.1), transparent 28%),
-        linear-gradient(180deg, rgba(18, 22, 30, 0.97), rgba(9, 11, 16, 0.99));
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 18px 46px rgba(0, 0, 0, 0.22);
+        radial-gradient(circle at top right, rgba(var(--a), 0.1), transparent 28%),
+        var(--panel-bg-primary);
+      box-shadow: var(--shadow-inset-subtle), var(--shadow-elev-strong);
     }
 
     .identity-panel__header {
@@ -76,8 +76,8 @@ import { Component, Input } from '@angular/core';
       padding: 18px 20px;
       border: 1px solid var(--metal-border);
       border-radius: 18px;
-      background: rgba(18, 22, 29, 0.94);
-      box-shadow: 0 0 0 1px rgba(73, 210, 255, 0.02), 0 16px 40px rgba(0, 0, 0, 0.18);
+      background: var(--card-bg);
+      box-shadow: var(--shadow-card);
       overflow: hidden;
     }
 
@@ -87,7 +87,7 @@ import { Component, Input } from '@angular/core';
       inset: 0 auto auto 0;
       width: 100%;
       height: 1px;
-      background: linear-gradient(90deg, rgba(57, 214, 255, 0.36), transparent 82%);
+      background: var(--line-accent-mid);
     }
 
     .identity-card + .identity-card {
@@ -95,8 +95,8 @@ import { Component, Input } from '@angular/core';
     }
 
     .identity-card--boost {
-      border-color: rgba(255, 179, 71, 0.24);
-      background: linear-gradient(180deg, rgba(28, 25, 18, 0.98), rgba(20, 17, 12, 0.99));
+      border-color: rgba(var(--h), 0.24);
+      background: var(--panel-bg-warning);
     }
 
     .identity-card__label {

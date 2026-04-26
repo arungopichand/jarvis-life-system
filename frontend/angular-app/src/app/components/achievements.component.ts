@@ -45,9 +45,9 @@ interface AchievementBadge {
       border: 1px solid var(--metal-border);
       border-radius: 24px;
       background:
-        radial-gradient(circle at top left, rgba(255, 179, 71, 0.1), transparent 30%),
-        linear-gradient(180deg, rgba(18, 22, 30, 0.97), rgba(9, 11, 16, 0.99));
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 18px 46px rgba(0, 0, 0, 0.22);
+        radial-gradient(circle at top left, rgba(var(--h), 0.1), transparent 30%),
+        var(--panel-bg-primary);
+      box-shadow: var(--shadow-inset-subtle), var(--shadow-elev-strong);
     }
 
     .achievements-panel__header {
@@ -98,19 +98,19 @@ interface AchievementBadge {
       inset: 0 auto auto 0;
       width: 100%;
       height: 1px;
-      background: linear-gradient(90deg, rgba(57, 214, 255, 0.34), transparent 82%);
+      background: linear-gradient(90deg, rgba(var(--a), 0.34), transparent 82%);
     }
 
     .achievement-badge--locked {
       border: 1px solid var(--metal-border);
-      background: rgba(18, 22, 29, 0.8);
+      background: var(--card-bg-muted);
       opacity: 0.72;
     }
 
     .achievement-badge--unlocked {
-      border: 1px solid rgba(66, 245, 158, 0.28);
-      background: linear-gradient(180deg, rgba(19, 33, 28, 0.96), rgba(10, 21, 18, 0.99));
-      box-shadow: 0 0 0 1px rgba(66, 245, 158, 0.05), 0 16px 40px rgba(0, 0, 0, 0.18);
+      border: 1px solid rgba(var(--s), 0.28);
+      background: var(--panel-bg-success);
+      box-shadow: 0 0 0 1px rgba(var(--s), 0.05), var(--shadow-elev-card);
     }
 
     .achievement-badge--new {
@@ -135,11 +135,11 @@ interface AchievementBadge {
     @keyframes achievementUnlock {
       0% {
         transform: scale(1);
-        box-shadow: 0 0 0 rgba(122, 246, 197, 0);
+        box-shadow: 0 0 0 rgba(var(--s), 0);
       }
       35% {
         transform: translateY(-2px);
-        box-shadow: 0 0 26px rgba(66, 245, 158, 0.18);
+        box-shadow: 0 0 26px rgba(var(--s), 0.18);
       }
       100% {
         transform: scale(1);

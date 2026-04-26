@@ -20,7 +20,7 @@
 
     <section class="demo-banner">
       <p>
-        Demo mode: data resets when the backend restarts. Database will be added next.
+        Demo environment: progress resets when the backend restarts. Persistent storage is coming next.
       </p>
     </section>
 
@@ -53,6 +53,46 @@
     </section>
 
     @if (selectedLayoutMode === 'Daily Mode') {
+      <app-today-command-center
+        [guide]="todayGuide"
+        [dailyProgress]="dailyProgress"
+      />
+
+      <app-summary-cards
+        [todayXpEarned]="todayXpEarned"
+        [totalPossibleXp]="totalPossibleXp"
+        [currentLevel]="currentLevel"
+        [dailyCompletionPercentage]="dailyCompletionPercentage"
+        [dailyScore]="dailyScore"
+        [dailyScoreStatus]="dailyScoreStatus"
+        [streakStats]="streakStats"
+        [streakRewardMessage]="streakRewardMessage"
+        [streakProgressMessage]="streakProgressMessage"
+        [recentActivitySummary]="recentActivitySummary"
+        [guidanceState]="currentGuidanceState"
+        [streakStatsErrorMessage]="streakStatsErrorMessage"
+      />
+
+      <app-focus-timer
+        (timerCompletedChange)="onFocusTimerCompleted($event)"
+      />
+
+      <app-missions
+        [missions]="missions"
+        [focusMissionId]="focusMissionId"
+        [recentlyCompletedMissionId]="recentlyCompletedMissionId"
+        [isLoading]="isLoading"
+        [errorMessage]="errorMessage"
+        [acknowledgementMessage]="missionAcknowledgement"
+        [lastCompletedMissionTitle]="lastCompletedMissionTitle"
+        (completeMission)="completeMission($event)"
+        (resetDay)="resetDay()"
+      />
+
+      <app-hydration-control />
+
+      <app-dopamine-control />
+
       <app-founder-discipline-protocol
         [isDisciplineModeActive]="isDisciplineModeActive"
         [disciplineModeMessage]="disciplineModeMessage"
@@ -70,64 +110,29 @@
         [currentStreak]="streakStats.currentStreak"
       />
 
-      <app-hydration-control />
-
-      <app-dopamine-control />
-
-      <app-emotional-stability />
-
-      <app-sleep-control />
-
-      <app-wealth-builder
-        [dailySpendingLimit]="userSettings.dailySpendingLimit"
-        [totalSpentToday]="totalSpentToday"
-      />
-
-    <app-summary-cards
-      [todayXpEarned]="todayXpEarned"
-      [totalPossibleXp]="totalPossibleXp"
-      [currentLevel]="currentLevel"
-      [dailyCompletionPercentage]="dailyCompletionPercentage"
-      [dailyScore]="dailyScore"
-      [dailyScoreStatus]="dailyScoreStatus"
-      [streakStats]="streakStats"
-      [streakRewardMessage]="streakRewardMessage"
-      [guidanceState]="currentGuidanceState"
-        [streakStatsErrorMessage]="streakStatsErrorMessage"
-      />
-
       <app-mood-check-in
         [selectedMood]="selectedMood"
         (selectedMoodChange)="onMoodSelected($event)"
-      />
-
-      <app-focus-timer
-        (timerCompletedChange)="onFocusTimerCompleted($event)"
       />
 
       <app-daily-checklist
         [morningChecklist]="morningChecklist"
         [nightChecklist]="nightChecklist"
         [errorMessage]="dailyLogErrorMessage"
+        [acknowledgementMessage]="checklistAcknowledgement"
+        [continuityMessage]="checklistContinuityMessage"
         (morningChecklistChange)="onMorningChecklistChange()"
         (nightChecklistChange)="onNightChecklistChange()"
-      />
-
-      <app-missions
-        [missions]="missions"
-        [focusMissionId]="focusMissionId"
-        [recentlyCompletedMissionId]="recentlyCompletedMissionId"
-        [isLoading]="isLoading"
-        [errorMessage]="errorMessage"
-        (completeMission)="completeMission($event)"
-        (resetDay)="resetDay()"
       />
 
       <app-finance-lab
         [expenses]="expenses"
         [expenseForm]="expenseForm"
         [totalSpentToday]="totalSpentToday"
+        [dailySpendingLimit]="userSettings.dailySpendingLimit"
         [errorMessage]="financeErrorMessage"
+        [acknowledgementMessage]="financeAcknowledgement"
+        [lastLoggedExpenseTitle]="lastLoggedExpenseTitle"
         (expenseFormChange)="expenseForm = $event"
         (addExpense)="addExpense()"
         (removeExpense)="removeExpense($event)"
@@ -136,52 +141,120 @@
       <app-jarvis-assistant
         [chatHistory]="chatHistory"
         [assistantMessage]="assistantMessage"
+        [recentActivitySummary]="recentActivitySummary"
+        [nextRecommendedAction]="dailyProgress?.nextRecommendedAction ?? currentGuidanceState.primaryAction"
         (assistantMessageChange)="assistantMessage = $event"
         (send)="sendAssistantMessage()"
       />
 
-      <app-achievements
-        [completedMissionsToday]="completedMissionsToday"
-        [totalSpentToday]="totalSpentToday"
-        [dailySpendingLimit]="userSettings.dailySpendingLimit"
-        [isFocusSessionComplete]="isFocusSessionComplete"
-        [morningCompleted]="dailyLog?.morningCompleted ?? false"
-        [nightCompleted]="dailyLog?.nightCompleted ?? false"
-        [currentStreak]="streakStats.currentStreak"
-      />
+      @defer (on viewport) {
+        <app-emotional-stability />
 
-      <app-identity-upgrade
-        [dailyScore]="dailyScore"
-        [currentStreak]="streakStats.currentStreak"
-        [completedMissionsToday]="completedMissionsToday"
-      />
+        <app-sleep-control />
 
-      <app-battle-plan
-        [missions]="missions"
-        [focusMissionId]="focusMissionId"
-        [mainSkill]="userSettings.mainSkill"
-        [dailySpendingLimit]="userSettings.dailySpendingLimit"
-        [totalSpentToday]="totalSpentToday"
-        [currentStreak]="streakStats.currentStreak"
-        [averageCompletionPercentageThisWeek]="averageCompletionPercentageThisWeek"
-        [gymMinutesTarget]="userSettings.gymMinutesTarget"
-        [currentConfidencePrompt]="currentConfidencePrompt"
-        [currentEnglishPrompt]="currentEnglishPrompt"
-      />
+        <app-wealth-builder
+          [dailySpendingLimit]="userSettings.dailySpendingLimit"
+          [totalSpentToday]="totalSpentToday"
+          [monthSummary]="incomeMonthSummary"
+          [recentIncome]="recentIncomeLogs"
+          [incomeForm]="incomeForm"
+          [errorMessage]="wealthErrorMessage"
+          [acknowledgementMessage]="financeAcknowledgement"
+          [skillToIncomeAction]="todayGuide?.wealthFocus ?? 'Convert one technical skill into one monetizable output this week.'"
+          [wealthHabitOfTheDay]="todayGuide?.mentalModel ?? 'Use first-principles thinking to choose your highest-leverage money action.'"
+          (incomeFormChange)="incomeForm = $event"
+          (addIncome)="addIncomeLog()"
+        />
 
-      <app-training-room
-        [currentEnglishPrompt]="currentEnglishPrompt"
-        [currentConfidencePrompt]="currentConfidencePrompt"
-        [currentTypingPrompt]="currentTypingPrompt"
-        [gymMinutesTarget]="userSettings.gymMinutesTarget"
-        [proteinGramsTarget]="userSettings.proteinGramsTarget"
-        (nextEnglishPrompt)="showNextEnglishPrompt()"
-        (nextConfidencePrompt)="showNextConfidencePrompt()"
-        (nextTypingPrompt)="showNextTypingPrompt()"
+        <app-achievements
+          [completedMissionsToday]="completedMissionsToday"
+          [totalSpentToday]="totalSpentToday"
+          [dailySpendingLimit]="userSettings.dailySpendingLimit"
+          [isFocusSessionComplete]="isFocusSessionComplete"
+          [morningCompleted]="dailyLog?.morningCompleted ?? false"
+          [nightCompleted]="dailyLog?.nightCompleted ?? false"
+          [currentStreak]="streakStats.currentStreak"
+        />
+
+        <app-identity-upgrade
+          [dailyScore]="dailyScore"
+          [currentStreak]="streakStats.currentStreak"
+          [completedMissionsToday]="completedMissionsToday"
+        />
+
+        <app-battle-plan
+          [missions]="missions"
+          [focusMissionId]="focusMissionId"
+          [mainSkill]="userSettings.mainSkill"
+          [dailySpendingLimit]="userSettings.dailySpendingLimit"
+          [totalSpentToday]="totalSpentToday"
+          [currentStreak]="streakStats.currentStreak"
+          [averageCompletionPercentageThisWeek]="averageCompletionPercentageThisWeek"
+          [gymMinutesTarget]="userSettings.gymMinutesTarget"
+          [currentConfidencePrompt]="currentConfidencePrompt"
+          [currentEnglishPrompt]="currentEnglishPrompt"
+        />
+
+        <app-training-room
+          [currentEnglishPrompt]="currentEnglishPrompt"
+          [currentConfidencePrompt]="currentConfidencePrompt"
+          [currentTypingPrompt]="currentTypingPrompt"
+          [gymMinutesTarget]="userSettings.gymMinutesTarget"
+          [proteinGramsTarget]="userSettings.proteinGramsTarget"
+          (nextEnglishPrompt)="showNextEnglishPrompt()"
+          (nextConfidencePrompt)="showNextConfidencePrompt()"
+          (nextTypingPrompt)="showNextTypingPrompt()"
+        />
+      } @placeholder {
+        <div aria-hidden="true"></div>
+      }
+    }
+
+    @defer (when selectedLayoutMode === 'Learning Mode') {
+      <app-learning-lab
+        [todayPlan]="learningTodayPlan"
+        [roadmap]="learningRoadmap"
+        [recentLogs]="recentLearningLogs"
+        [form]="learningForm"
+        [acknowledgementMessage]="learningAcknowledgement"
+        [errorMessage]="learningErrorMessage"
+        (formChange)="learningForm = $event"
+        (submit)="submitLearningLog()"
+        (markTopicProgress)="updateLearningTopicProgress($event)"
       />
     }
 
-    @if (selectedLayoutMode === 'Review Mode') {
+    @defer (when selectedLayoutMode === 'Communication Mode') {
+      <app-communication-lab
+        [todayPlan]="communicationTodayPlan"
+        [recentLogs]="recentCommunicationLogs"
+        [form]="communicationForm"
+        [acknowledgementMessage]="communicationAcknowledgement"
+        [errorMessage]="communicationErrorMessage"
+        (formChange)="communicationForm = $event"
+        (submit)="submitCommunicationLog()"
+      />
+    }
+
+    @defer (when selectedLayoutMode === 'Writing Mode') {
+      <app-writing-studio
+        [reflectionPrompt]="todayGuide?.reflectionPrompt ?? ''"
+        [blogPrompt]="todayGuide?.blogPrompt ?? ''"
+        [diaryForm]="diaryForm"
+        [draftForm]="blogDraftForm"
+        [recentDiary]="recentDiaryEntries"
+        [recentDrafts]="recentBlogDrafts"
+        [acknowledgementMessage]="learningAcknowledgement || communicationAcknowledgement"
+        [errorMessage]="writingErrorMessage"
+        (diaryFormChange)="diaryForm = $event"
+        (draftFormChange)="blogDraftForm = $event"
+        (addDiary)="addDiaryEntry()"
+        (addDraft)="addBlogDraft()"
+        (markReady)="markBlogDraftReady($event)"
+      />
+    }
+
+    @defer (when selectedLayoutMode === 'Review Mode') {
       <app-weekly-review
         [weeklyStats]="weeklyStats"
         [totalCompletedMissionsThisWeek]="totalCompletedMissionsThisWeek"
@@ -203,7 +276,7 @@
       />
     }
 
-    @if (selectedLayoutMode === 'Setup Mode') {
+    @defer (when selectedLayoutMode === 'Setup Mode') {
       <app-user-settings
         [settings]="userSettings"
         [successMessage]="settingsSuccessMessage"

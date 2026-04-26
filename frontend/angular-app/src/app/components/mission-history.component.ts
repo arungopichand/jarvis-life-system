@@ -10,7 +10,7 @@ import { MissionService } from '../services/mission.service';
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <section class="history-panel">
+    <section class="history-panel ui-panel">
       <div class="history-panel__header">
         <div>
           <p class="history-panel__eyebrow">Archive</p>
@@ -39,16 +39,16 @@ import { MissionService } from '../services/mission.service';
       }
 
       @if (isLoading) {
-        <p class="info-message">Loading mission history...</p>
+        <p class="info-message" aria-live="polite">Loading mission history...</p>
       }
 
       @if (!isLoading && history.length === 0) {
-        <p class="info-message">No mission history found yet.</p>
+        <p class="info-message" aria-live="polite">No mission history yet. Complete a few missions and this timeline will start filling in.</p>
       }
 
       <div class="history-list">
         @for (day of history; track day.date) {
-          <article class="history-card">
+          <article class="history-card ui-card ui-accent-line">
             <button
               type="button"
               class="history-card__summary"
@@ -58,18 +58,18 @@ import { MissionService } from '../services/mission.service';
               <div class="history-card__summary-main">
                 <div class="history-card__title-group">
                   <h3>{{ formatDate(day.date) }}</h3>
-                  <span class="history-card__badge">
+                  <span class="history-card__badge ui-chip ui-chip--info">
                     {{ day.completedMissions }}/{{ day.totalMissions }} complete
                   </span>
                 </div>
 
                 <div class="history-card__meta">
-                  <span>{{ day.completionPercentage }}%</span>
-                  <span>{{ day.totalMissions === 0 ? 'No missions' : 'Mission day' }}</span>
+                  <span class="ui-chip">{{ day.completionPercentage }}%</span>
+                  <span class="ui-chip">{{ day.totalMissions === 0 ? 'No missions' : 'Mission day' }}</span>
                 </div>
               </div>
 
-              <span class="history-card__toggle">
+              <span class="history-card__toggle ui-chip">
                 {{ isExpanded(day.date) ? 'Hide Details' : 'Show Details' }}
               </span>
             </button>
@@ -78,14 +78,14 @@ import { MissionService } from '../services/mission.service';
               <div class="history-card__details">
                 @if (day.missions.length === 0) {
                   <p class="info-message history-card__empty">
-                    No missions were created for this day.
+                    No missions were created on this day.
                   </p>
                 }
 
                 <div class="history-missions">
                   @for (mission of day.missions; track mission.id) {
                     <article
-                      class="history-mission"
+                      class="history-mission ui-card ui-card--inset"
                       [class.history-mission--completed]="mission.isCompleted"
                       [class.history-mission--missed]="!mission.isCompleted"
                     >
@@ -113,12 +113,6 @@ import { MissionService } from '../services/mission.service';
   styles: [`
     .history-panel {
       padding: 24px;
-      border: 1px solid rgba(73, 210, 255, 0.16);
-      border-radius: 24px;
-      background:
-        radial-gradient(circle at top left, rgba(122, 246, 197, 0.08), transparent 30%),
-        linear-gradient(180deg, rgba(9, 20, 38, 0.96), rgba(7, 14, 28, 0.98));
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02), 0 20px 48px rgba(0, 0, 0, 0.2);
     }
 
     .history-panel__header {
@@ -131,7 +125,7 @@ import { MissionService } from '../services/mission.service';
 
     .history-panel__eyebrow {
       margin: 0 0 8px;
-      color: var(--accent);
+      color: var(--text-muted);
       letter-spacing: 0.2rem;
       text-transform: uppercase;
       font-size: 0.74rem;
@@ -159,17 +153,17 @@ import { MissionService } from '../services/mission.service';
 
     .history-panel__filter select {
       padding: 12px 14px;
-      border: 1px solid rgba(73, 210, 255, 0.16);
+      border: 1px solid var(--metal-border);
       border-radius: 14px;
-      background: rgba(12, 29, 50, 0.92);
+      background: var(--color-surface-inset);
       color: var(--text-main);
       outline: none;
       font: inherit;
     }
 
     .history-panel__filter select:focus {
-      border-color: rgba(73, 210, 255, 0.65);
-      box-shadow: 0 0 0 3px rgba(73, 210, 255, 0.12);
+      border-color: rgba(var(--a), 0.65);
+      box-shadow: 0 0 0 3px rgba(var(--a), 0.12);
     }
 
     .history-list {
@@ -179,21 +173,6 @@ import { MissionService } from '../services/mission.service';
 
     .history-card {
       position: relative;
-      border: 1px solid rgba(73, 210, 255, 0.12);
-      border-radius: 18px;
-      background: rgba(10, 23, 40, 0.88);
-      box-shadow: 0 0 0 1px rgba(73, 210, 255, 0.02), 0 16px 40px rgba(0, 0, 0, 0.2);
-      overflow: hidden;
-    }
-
-    .history-card::after {
-      content: '';
-      position: absolute;
-      inset: 0 auto auto 0;
-      width: 100%;
-      height: 1px;
-      background: linear-gradient(90deg, rgba(73, 210, 255, 0.35), transparent 82%);
-      pointer-events: none;
     }
 
     .history-card__summary {
@@ -211,7 +190,7 @@ import { MissionService } from '../services/mission.service';
     }
 
     .history-card__summary:hover {
-      background: rgba(255, 255, 255, 0.015);
+      background: var(--state-hover);
     }
 
     .history-card__summary-main {
@@ -232,11 +211,6 @@ import { MissionService } from '../services/mission.service';
     }
 
     .history-card__badge {
-      padding: 6px 10px;
-      border: 1px solid rgba(73, 210, 255, 0.2);
-      border-radius: 999px;
-      background: rgba(73, 210, 255, 0.08);
-      color: var(--accent);
       font-size: 0.84rem;
     }
 
@@ -250,9 +224,7 @@ import { MissionService } from '../services/mission.service';
 
     .history-card__meta span,
     .history-card__toggle {
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.04);
+      white-space: nowrap;
     }
 
     .history-card__toggle {
@@ -262,7 +234,7 @@ import { MissionService } from '../services/mission.service';
 
     .history-card__details {
       padding: 0 20px 20px;
-      border-top: 1px solid rgba(73, 210, 255, 0.08);
+      border-top: 1px solid var(--color-border-soft);
     }
 
     .history-card__empty {
@@ -278,18 +250,15 @@ import { MissionService } from '../services/mission.service';
 
     .history-mission {
       padding: 16px 18px;
-      border: 1px solid rgba(73, 210, 255, 0.1);
-      border-radius: 16px;
-      background: rgba(7, 17, 31, 0.92);
     }
 
     .history-mission--completed {
-      border-color: rgba(122, 246, 197, 0.22);
-      background: linear-gradient(180deg, rgba(11, 30, 31, 0.96), rgba(8, 20, 23, 0.96));
+      border-color: rgba(var(--s), 0.3);
+      background: var(--gradient-success);
     }
 
     .history-mission--missed {
-      border-color: rgba(255, 180, 84, 0.22);
+      border-color: rgba(var(--h), 0.22);
     }
 
     .history-mission__top-row {
@@ -322,7 +291,7 @@ import { MissionService } from '../services/mission.service';
     .history-mission__meta span {
       padding: 6px 10px;
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.04);
+      background: var(--card-bg-muted);
     }
 
     @media (max-width: 820px) {

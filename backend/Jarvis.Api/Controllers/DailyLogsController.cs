@@ -26,7 +26,7 @@ public class DailyLogsController : ControllerBase
     }
 
     [HttpPost("update")]
-    public async Task<ActionResult<DailyLog>> Update(UpdateDailyLogRequest request)
+    public async Task<ActionResult<DailyLog>> Update([FromBody] UpdateDailyLogRequest request)
     {
         var dailyLog = await GetOrCreateTodayLogAsync();
 

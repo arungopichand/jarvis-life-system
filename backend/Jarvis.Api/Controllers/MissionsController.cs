@@ -120,12 +120,17 @@ public class MissionsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Mission>> Create(Mission mission)
+    public async Task<ActionResult<Mission>> Create([FromBody] CreateMissionRequest request)
     {
-        if (mission.MissionDate == default)
+        var mission = new Mission
         {
-            mission.MissionDate = DateTime.Today;
-        }
+            Title = request.Title.Trim(),
+            Description = string.IsNullOrWhiteSpace(request.Description) ? null : request.Description.Trim(),
+            XpReward = request.XpReward,
+            IsCompleted = false,
+            MissionDate = request.MissionDate?.Date ?? DateTime.Today,
+            Category = request.Category.Trim()
+        };
 
         _dbContext.Missions.Add(mission);
         await _dbContext.SaveChangesAsync();

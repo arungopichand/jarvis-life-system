@@ -1,17 +1,55 @@
-# .NET
-bin/
-obj/
+# .NET build outputs
+**/bin/
+**/obj/
+**/artifacts/
 
-# Angular
-node_modules/
-dist/
+# Angular/Node build outputs
+**/node_modules/
+**/dist/
+**/.angular/cache/
+**/coverage/
+**/.sass-cache/
+**/out-tsc/
 
-# Build temp folders
-build-verify-temp/
+# Repository/local build temp folders
+.build/
+**/.build/
+**/build-verify/
+**/build-verify-temp/
+**/verify-obj/
+tmp/
+temp/
+*.tmp
+*.cache
+
+# Logs
 *.log
+npm-debug.log*
+yarn-error.log*
+testem.log
 
-# VS Code
+# Local database files
+*.mdf
+*.ldf
+*.sqlite
+*.sqlite3
+*.db
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+**/appsettings.Local.json
+**/appsettings.*.local.json
+secrets.json
+
+# IDE/editor
 .vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
 
 # OS
 .DS_Store

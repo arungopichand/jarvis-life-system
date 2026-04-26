@@ -105,9 +105,9 @@ import { UserSettings } from '../models/user-settings';
       margin: 0 0 16px;
       padding: 14px 16px;
       border-radius: 14px;
-      color: #d8ffef;
-      background: rgba(30, 168, 110, 0.16);
-      border: 1px solid rgba(122, 246, 197, 0.2);
+      color: var(--text-main);
+      background: rgba(var(--s), 0.16);
+      border: 1px solid rgba(var(--s), 0.2);
     }
 
     @media (max-width: 820px) {

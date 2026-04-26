@@ -68,10 +68,10 @@ import { Component } from '@angular/core';
       border: 1px solid var(--metal-border);
       border-radius: 24px;
       background:
-        radial-gradient(circle at top right, rgba(57, 214, 255, 0.12), transparent 28%),
-        radial-gradient(circle at left, rgba(255, 179, 71, 0.1), transparent 24%),
-        linear-gradient(180deg, rgba(18, 22, 30, 0.97), rgba(9, 11, 16, 0.99));
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 18px 46px rgba(0, 0, 0, 0.22);
+        radial-gradient(circle at top right, rgba(var(--a), 0.12), transparent 28%),
+        radial-gradient(circle at left, rgba(var(--h), 0.1), transparent 24%),
+        var(--panel-bg-primary);
+      box-shadow: var(--shadow-inset-soft), var(--shadow-elev-strong);
     }
 
     .dopamine-panel__header {
@@ -109,7 +109,7 @@ import { Component } from '@angular/core';
       padding: 14px 16px;
       border: 1px solid var(--metal-border);
       border-radius: 18px;
-      background: rgba(17, 21, 27, 0.88);
+      background: var(--color-surface-inset);
     }
 
     .dopamine-panel__status-label {
@@ -133,7 +133,7 @@ import { Component } from '@angular/core';
       padding: 18px 20px;
       border: 1px solid var(--metal-border);
       border-radius: 18px;
-      background: rgba(18, 22, 29, 0.88);
+      background: var(--card-bg);
     }
 
     .dopamine-rules__label {
@@ -171,9 +171,9 @@ import { Component } from '@angular/core';
 
     .dopamine-toggle {
       padding: 12px 16px;
-      border: 1px solid rgba(255, 179, 71, 0.34);
+      border: 1px solid rgba(var(--h), 0.34);
       border-radius: 14px;
-      background: rgba(255, 179, 71, 0.08);
+      background: rgba(var(--h), 0.08);
       color: var(--text-main);
       font: inherit;
       font-weight: 700;
@@ -181,25 +181,25 @@ import { Component } from '@angular/core';
     }
 
     .dopamine-toggle--active {
-      border-color: rgba(66, 245, 158, 0.34);
-      background: linear-gradient(135deg, rgba(66, 245, 158, 0.18), rgba(57, 214, 255, 0.14));
-      box-shadow: 0 0 24px rgba(66, 245, 158, 0.1);
+      border-color: rgba(var(--s), 0.34);
+      background: linear-gradient(135deg, rgba(var(--s), 0.18), rgba(var(--a), 0.14));
+      box-shadow: 0 0 24px rgba(var(--s), 0.1);
     }
 
     .dopamine-feedback {
       margin: 0;
       padding: 14px 16px;
-      border: 1px solid rgba(255, 91, 91, 0.24);
+      border: 1px solid rgba(var(--d), 0.24);
       border-radius: 16px;
-      background: rgba(255, 91, 91, 0.08);
+      background: rgba(var(--d), 0.08);
       color: var(--text-main);
       font-weight: 600;
       line-height: 1.6;
     }
 
     .dopamine-feedback--active {
-      border-color: rgba(66, 245, 158, 0.28);
-      background: linear-gradient(90deg, rgba(57, 214, 255, 0.12), rgba(66, 245, 158, 0.12));
+      border-color: rgba(var(--s), 0.28);
+      background: linear-gradient(90deg, rgba(var(--a), 0.12), rgba(var(--s), 0.12));
     }
 
     @media (max-width: 820px) {

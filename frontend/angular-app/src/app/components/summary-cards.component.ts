@@ -12,7 +12,7 @@ import { StreakStats } from '../models/streak-stats';
     <section class="stats-grid">
       <article class="stat-card stat-card--score stat-card--wide">
         <span class="stat-card__label">Daily Score</span>
-        <strong class="stat-card__value">Daily Score: {{ dailyScore }} / 100</strong>
+        <strong class="stat-card__value">{{ dailyScore }} / 100</strong>
         <span class="stat-card__hint">{{ dailyScoreStatus }}</span>
       </article>
 
@@ -55,6 +55,11 @@ import { StreakStats } from '../models/streak-stats';
       </article>
 
       <p class="streak-reward-message">{{ streakRewardMessage }}</p>
+      <p class="streak-continuity">{{ recentActivitySummary }}</p>
+
+      @if (streakProgressMessage) {
+        <p class="streak-progress-message" aria-live="polite">{{ streakProgressMessage }}</p>
+      }
 
       @if (streakStatsErrorMessage) {
         <p class="error-message streak-panel__error">{{ streakStatsErrorMessage }}</p>
@@ -65,7 +70,7 @@ import { StreakStats } from '../models/streak-stats';
       <div class="guide-panel__header guide-panel__header--stacked">
         <div>
           <p class="guide-panel__eyebrow">Guidance</p>
-          <h2>Current Guidance State</h2>
+          <h2>Current Guidance</h2>
         </div>
       </div>
 
@@ -79,7 +84,7 @@ import { StreakStats } from '../models/streak-stats';
 
         <article class="guide-detail-card guide-detail-card--warning" [class.guide-detail-card--muted]="!guidanceState.warning">
           <span class="guide-detail-card__label">Warning</span>
-          <p>{{ guidanceState.warning || 'No warning. Keep moving.' }}</p>
+          <p>{{ guidanceState.warning || 'No active warning. Stay consistent and keep momentum.' }}</p>
         </article>
       </div>
     </section>
@@ -95,8 +100,8 @@ import { StreakStats } from '../models/streak-stats';
     }
 
     .stat-card--score {
-      border-color: rgba(255, 179, 71, 0.3);
-      background: linear-gradient(135deg, rgba(25, 27, 30, 0.98), rgba(19, 28, 33, 0.96));
+      border-color: rgba(var(--h), 0.22);
+      background: linear-gradient(135deg, var(--elev-3), var(--elev-2));
     }
 
     .stat-card::after {
@@ -105,7 +110,7 @@ import { StreakStats } from '../models/streak-stats';
       inset: 0 auto auto 0;
       width: 100%;
       height: 1px;
-      background: linear-gradient(90deg, rgba(57, 214, 255, 0.55), transparent 78%);
+      background: linear-gradient(90deg, rgba(var(--a), 0.28), transparent 78%);
     }
 
     .stat-card--xp::before,
@@ -116,7 +121,7 @@ import { StreakStats } from '../models/streak-stats';
       width: 88px;
       height: 88px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(57, 214, 255, 0.18), transparent 68%);
+      background: radial-gradient(circle, rgba(var(--a), 0.11), transparent 68%);
       pointer-events: none;
     }
 
@@ -158,7 +163,21 @@ import { StreakStats } from '../models/streak-stats';
       inset: 0 auto auto 0;
       width: 100%;
       height: 1px;
-      background: linear-gradient(90deg, rgba(57, 214, 255, 0.45), transparent 80%);
+      background: linear-gradient(90deg, rgba(var(--a), 0.24), transparent 80%);
+    }
+
+    .streak-continuity {
+      margin: 10px 0 0;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+
+    .streak-progress-message {
+      margin: 10px 0 0;
+      color: var(--text-main);
+      font-size: 0.9rem;
+      line-height: 1.55;
     }
 
     .guide-panel__header--stacked {
@@ -183,27 +202,31 @@ import { StreakStats } from '../models/streak-stats';
       padding: 16px 18px;
       border: 1px solid var(--metal-border);
       border-radius: 18px;
-      background: rgba(18, 22, 29, 0.84);
+      background: var(--elev-2);
     }
 
     .guide-detail-card--warning {
-      border-color: rgba(255, 179, 71, 0.28);
-      background: rgba(255, 179, 71, 0.08);
+      border-color: rgba(var(--h), 0.28);
+      background: rgba(var(--h), 0.08);
     }
 
     .guide-detail-card--muted {
-      border-color: rgba(73, 210, 255, 0.1);
-      background: rgba(255, 255, 255, 0.03);
+      border-color: var(--color-border-soft);
+      background: var(--state-hover);
     }
 
     .guide-detail-card__label {
       display: block;
       margin-bottom: 8px;
-      color: var(--accent);
+      color: var(--text-muted);
       font-size: 0.78rem;
       font-weight: 700;
       letter-spacing: 0.08rem;
       text-transform: uppercase;
+    }
+
+    .guide-detail-card--warning .guide-detail-card__label {
+      color: var(--warning);
     }
 
     .guide-detail-card p {
@@ -228,6 +251,8 @@ export class SummaryCardsComponent {
   @Input({ required: true }) dailyScoreStatus!: string;
   @Input({ required: true }) streakStats!: StreakStats;
   @Input({ required: true }) streakRewardMessage!: string;
+  @Input() streakProgressMessage = '';
+  @Input() recentActivitySummary = '';
   @Input({ required: true }) guidanceState!: GuidanceState;
   @Input() streakStatsErrorMessage = '';
 }

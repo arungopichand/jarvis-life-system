@@ -1,3 +1,4 @@
+using Jarvis.Api.Contracts;
 using Jarvis.Api.Data;
 using Jarvis.Api.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -27,8 +28,17 @@ public class MissionTemplatesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<MissionTemplate>> Create(MissionTemplate template)
+    public async Task<ActionResult<MissionTemplate>> Create([FromBody] SaveMissionTemplateRequest request)
     {
+        var template = new MissionTemplate
+        {
+            Title = request.Title.Trim(),
+            Description = string.IsNullOrWhiteSpace(request.Description) ? null : request.Description.Trim(),
+            XpReward = request.XpReward,
+            Category = request.Category.Trim(),
+            IsEnabled = request.IsEnabled
+        };
+
         _dbContext.MissionTemplates.Add(template);
         await _dbContext.SaveChangesAsync();
 
@@ -36,7 +46,7 @@ public class MissionTemplatesController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<MissionTemplate>> Update(int id, MissionTemplate request)
+    public async Task<ActionResult<MissionTemplate>> Update(int id, [FromBody] SaveMissionTemplateRequest request)
     {
         var template = await _dbContext.MissionTemplates.FirstOrDefaultAsync(item => item.Id == id);
 
@@ -45,10 +55,10 @@ public class MissionTemplatesController : ControllerBase
             return NotFound();
         }
 
-        template.Title = request.Title;
-        template.Description = request.Description;
+        template.Title = request.Title.Trim();
+        template.Description = string.IsNullOrWhiteSpace(request.Description) ? null : request.Description.Trim();
         template.XpReward = request.XpReward;
-        template.Category = request.Category;
+        template.Category = request.Category.Trim();
         template.IsEnabled = request.IsEnabled;
 
         await _dbContext.SaveChangesAsync();

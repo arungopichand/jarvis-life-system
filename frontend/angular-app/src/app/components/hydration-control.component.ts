@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <section class="hydration-panel">
+    <section class="hydration-panel ui-panel">
       <div class="hydration-panel__header">
         <div>
           <p class="hydration-panel__eyebrow">Body Systems</p>
@@ -16,30 +16,30 @@ import { Component } from '@angular/core';
           </p>
         </div>
 
-        <article class="hydration-panel__target">
+        <article class="hydration-panel__target ui-card ui-card--inset">
           <span class="hydration-panel__target-label">Daily Target</span>
           <strong>3 Liters / 8 Glasses</strong>
         </article>
       </div>
 
       <div class="hydration-grid">
-        <article class="hydration-card hydration-card--primary">
+          <article class="hydration-card ui-card hydration-card--primary">
           <span class="hydration-card__label">Glasses Completed</span>
           <strong class="hydration-card__value">{{ glassesCompleted }} / {{ targetGlasses }}</strong>
         </article>
 
-        <article class="hydration-card">
+          <article class="hydration-card ui-card">
           <span class="hydration-card__label">Progress</span>
           <strong class="hydration-card__value">{{ progressPercentage }}%</strong>
         </article>
 
-        <article class="hydration-card">
+          <article class="hydration-card ui-card">
           <span class="hydration-card__label">Remaining Glasses</span>
           <strong class="hydration-card__value">{{ remainingGlasses }}</strong>
         </article>
       </div>
 
-      <article class="hydration-status">
+      <article class="hydration-status ui-card">
         <span class="hydration-status__label">Hydration Status</span>
         <p>{{ hydrationStatusMessage }}</p>
       </article>
@@ -59,12 +59,6 @@ import { Component } from '@angular/core';
     .hydration-panel {
       margin-bottom: 24px;
       padding: 24px;
-      border: 1px solid var(--metal-border);
-      border-radius: 24px;
-      background:
-        radial-gradient(circle at top right, rgba(57, 214, 255, 0.12), transparent 28%),
-        linear-gradient(180deg, rgba(18, 22, 30, 0.97), rgba(9, 11, 16, 0.99));
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 18px 46px rgba(0, 0, 0, 0.22);
     }
 
     .hydration-panel__header {
@@ -100,9 +94,6 @@ import { Component } from '@angular/core';
       gap: 6px;
       min-width: 220px;
       padding: 14px 16px;
-      border: 1px solid var(--metal-border);
-      border-radius: 18px;
-      background: rgba(17, 21, 27, 0.88);
     }
 
     .hydration-panel__target-label {
@@ -126,14 +117,11 @@ import { Component } from '@angular/core';
 
     .hydration-card {
       padding: 18px 20px;
-      border: 1px solid var(--metal-border);
-      border-radius: 18px;
-      background: rgba(18, 22, 29, 0.9);
     }
 
     .hydration-card--primary {
-      border-color: rgba(57, 214, 255, 0.3);
-      box-shadow: 0 0 0 1px rgba(57, 214, 255, 0.08);
+      border-color: rgba(var(--a), 0.3);
+      box-shadow: 0 0 0 1px rgba(var(--a), 0.08);
     }
 
     .hydration-card__label,
@@ -156,9 +144,6 @@ import { Component } from '@angular/core';
     .hydration-status {
       margin-bottom: 18px;
       padding: 18px 20px;
-      border: 1px solid var(--metal-border);
-      border-radius: 18px;
-      background: rgba(18, 22, 29, 0.84);
     }
 
     .hydration-status p {

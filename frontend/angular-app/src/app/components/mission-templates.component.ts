@@ -10,17 +10,17 @@ import { MissionTemplateService } from '../services/mission-template.service';
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <section class="templates-panel">
+    <section class="templates-panel ui-panel">
       <div class="templates-panel__header">
         <div>
           <p class="templates-panel__eyebrow">Templates</p>
           <h2>Mission Templates</h2>
           <p class="templates-panel__subtitle">
-            Create reusable missions for your system.
+            Build reusable mission patterns so tomorrow starts with clear direction.
           </p>
         </div>
 
-        <span class="templates-panel__count">{{ templates.length }} templates</span>
+        <span class="templates-panel__count ui-chip ui-chip--info">{{ templates.length }} templates</span>
       </div>
 
       <form class="template-form" (ngSubmit)="submitForm()">
@@ -76,7 +76,7 @@ import { MissionTemplateService } from '../services/mission-template.service';
         </label>
 
         <div class="template-form__actions">
-          <button type="submit" class="finance-button">
+          <button type="submit" class="finance-button" [disabled]="!isFormValid()">
             {{ isEditing ? 'Update Template' : 'Create Template' }}
           </button>
 
@@ -97,22 +97,22 @@ import { MissionTemplateService } from '../services/mission-template.service';
       }
 
       @if (isLoading) {
-        <p class="info-message">Loading mission templates...</p>
+        <p class="info-message" aria-live="polite">Loading mission templates...</p>
       }
 
       @if (!isLoading && templates.length === 0) {
-        <p class="info-message">No mission templates yet. Create your first one above.</p>
+        <p class="info-message" aria-live="polite">No templates yet. Add a few repeatable missions to make daily planning faster.</p>
       }
 
       <div class="template-list">
         @for (template of templates; track template.id) {
-          <article class="template-card" [class.template-card--disabled]="!template.isEnabled">
+          <article class="template-card ui-card ui-accent-line" [class.template-card--disabled]="!template.isEnabled">
             <div class="template-card__content">
               <div class="template-card__top-row">
                 <div class="template-card__title-group">
                   <h3>{{ template.title }}</h3>
                   <span
-                    class="template-status"
+                    class="template-status ui-chip"
                     [class.template-status--enabled]="template.isEnabled"
                     [class.template-status--disabled]="!template.isEnabled"
                   >
@@ -120,12 +120,12 @@ import { MissionTemplateService } from '../services/mission-template.service';
                   </span>
                 </div>
 
-                <span class="mission-card__xp">{{ template.xpReward }} XP</span>
+                <span class="mission-card__xp ui-chip ui-chip--warning">{{ template.xpReward }} XP</span>
               </div>
 
               <div class="template-card__meta">
-                <span>{{ template.category }}</span>
-                <span>ID {{ template.id }}</span>
+                <span class="ui-chip">{{ template.category }}</span>
+                <span class="ui-chip">ID {{ template.id }}</span>
               </div>
 
               @if (template.description) {
@@ -150,12 +150,6 @@ import { MissionTemplateService } from '../services/mission-template.service';
   styles: [`
     .templates-panel {
       padding: 24px;
-      border: 1px solid rgba(73, 210, 255, 0.16);
-      border-radius: 24px;
-      background:
-        radial-gradient(circle at top right, rgba(73, 210, 255, 0.12), transparent 32%),
-        linear-gradient(180deg, rgba(10, 22, 40, 0.96), rgba(6, 14, 26, 0.98));
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02), 0 22px 50px rgba(0, 0, 0, 0.22);
     }
 
     .templates-panel__header {
@@ -168,7 +162,7 @@ import { MissionTemplateService } from '../services/mission-template.service';
 
     .templates-panel__eyebrow {
       margin: 0 0 8px;
-      color: var(--accent);
+      color: var(--text-muted);
       letter-spacing: 0.2rem;
       text-transform: uppercase;
       font-size: 0.74rem;
@@ -186,11 +180,6 @@ import { MissionTemplateService } from '../services/mission-template.service';
     }
 
     .templates-panel__count {
-      padding: 8px 12px;
-      border: 1px solid rgba(73, 210, 255, 0.2);
-      border-radius: 999px;
-      color: var(--accent);
-      background: rgba(73, 210, 255, 0.08);
       font-size: 0.9rem;
       white-space: nowrap;
     }
@@ -206,9 +195,9 @@ import { MissionTemplateService } from '../services/mission-template.service';
       width: 100%;
       min-height: 110px;
       padding: 12px 14px;
-      border: 1px solid rgba(73, 210, 255, 0.16);
+      border: 1px solid var(--metal-border);
       border-radius: 14px;
-      background: rgba(12, 29, 50, 0.92);
+      background: var(--color-surface-inset);
       color: var(--text-main);
       outline: none;
       resize: vertical;
@@ -216,12 +205,12 @@ import { MissionTemplateService } from '../services/mission-template.service';
     }
 
     .field textarea:focus {
-      border-color: rgba(73, 210, 255, 0.65);
-      box-shadow: 0 0 0 3px rgba(73, 210, 255, 0.12);
+      border-color: rgba(var(--a), 0.65);
+      box-shadow: 0 0 0 3px rgba(var(--a), 0.12);
     }
 
     .field textarea::placeholder {
-      color: #6d8499;
+      color: var(--text-muted);
     }
 
     .template-form__description {
@@ -235,16 +224,16 @@ import { MissionTemplateService } from '../services/mission-template.service';
       align-self: end;
       min-height: 48px;
       padding: 12px 14px;
-      border: 1px solid rgba(73, 210, 255, 0.14);
+      border: 1px solid var(--color-border-soft);
       border-radius: 14px;
-      background: rgba(255, 255, 255, 0.03);
+      background: var(--card-bg-muted);
       color: var(--text-main);
     }
 
     .template-checkbox input {
       width: 18px;
       height: 18px;
-      accent-color: #49d2ff;
+      accent-color: var(--color-accent-500);
     }
 
     .template-form__actions {
@@ -258,9 +247,9 @@ import { MissionTemplateService } from '../services/mission-template.service';
       margin: 0 0 16px;
       padding: 14px 16px;
       border-radius: 14px;
-      color: #d8ffef;
-      background: rgba(30, 168, 110, 0.16);
-      border: 1px solid rgba(122, 246, 197, 0.2);
+      color: var(--text-main);
+      background: rgba(var(--s), 0.16);
+      border: 1px solid rgba(var(--s), 0.2);
     }
 
     .template-list {
@@ -273,14 +262,10 @@ import { MissionTemplateService } from '../services/mission-template.service';
       justify-content: space-between;
       gap: 20px;
       padding: 18px 20px;
-      border: 1px solid rgba(73, 210, 255, 0.12);
-      border-radius: 18px;
-      background: rgba(10, 23, 40, 0.88);
-      box-shadow: 0 0 0 1px rgba(73, 210, 255, 0.02), 0 16px 40px rgba(0, 0, 0, 0.2);
     }
 
     .template-card--disabled {
-      border-color: rgba(255, 180, 84, 0.18);
+      border-color: rgba(var(--h), 0.18);
       opacity: 0.86;
     }
 
@@ -309,8 +294,6 @@ import { MissionTemplateService } from '../services/mission-template.service';
     }
 
     .template-status {
-      padding: 6px 10px;
-      border-radius: 999px;
       font-size: 0.8rem;
       font-weight: 700;
       letter-spacing: 0.03rem;
@@ -318,15 +301,13 @@ import { MissionTemplateService } from '../services/mission-template.service';
     }
 
     .template-status--enabled {
-      border: 1px solid rgba(122, 246, 197, 0.28);
-      background: rgba(122, 246, 197, 0.12);
-      color: #93ffd1;
+      border-color: rgba(var(--s), 0.34);
+      background: rgba(var(--s), 0.16);
     }
 
     .template-status--disabled {
-      border: 1px solid rgba(255, 180, 84, 0.24);
-      background: rgba(255, 180, 84, 0.12);
-      color: #ffd68f;
+      border-color: rgba(var(--h), 0.34);
+      background: rgba(var(--h), 0.16);
     }
 
     .template-card__meta {
@@ -338,11 +319,7 @@ import { MissionTemplateService } from '../services/mission-template.service';
       font-size: 0.92rem;
     }
 
-    .template-card__meta span {
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.04);
-    }
+    .template-card__meta span { white-space: nowrap; }
 
     .template-card__description {
       margin: 0;
@@ -504,7 +481,7 @@ export class MissionTemplatesComponent implements OnInit {
     });
   }
 
-  private isFormValid(): boolean {
+  isFormValid(): boolean {
     return Boolean(
       this.templateForm.title.trim() &&
       this.templateForm.category.trim() &&

@@ -14,7 +14,7 @@ type MoodOption = 'Focused' | 'Lazy' | 'Tired' | 'Anxious' | 'Confident';
           <p class="mood-panel__eyebrow">Status</p>
           <h2>Mood Check-In</h2>
           <p class="mood-panel__subtitle">
-            Pick your current mood and let the dashboard give you one simple direction for the next step.
+            Pick your current state so guidance can match your energy, not just your to-do list.
           </p>
         </div>
       </div>
@@ -38,7 +38,7 @@ type MoodOption = 'Focused' | 'Lazy' | 'Tired' | 'Anxious' | 'Confident';
           <p>{{ guidanceByMood[selectedMood] }}</p>
         </article>
       } @else {
-        <p class="info-message">Select one mood to get a quick suggestion.</p>
+        <p class="info-message" aria-live="polite">Select one mood to unlock a context-aware next step.</p>
       }
     </section>
   `,
@@ -48,9 +48,9 @@ type MoodOption = 'Focused' | 'Lazy' | 'Tired' | 'Anxious' | 'Confident';
       border: 1px solid var(--metal-border);
       border-radius: 24px;
       background:
-        radial-gradient(circle at top left, rgba(57, 214, 255, 0.12), transparent 32%),
-        linear-gradient(180deg, rgba(18, 22, 30, 0.97), rgba(9, 11, 16, 0.99));
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 18px 46px rgba(0, 0, 0, 0.22);
+        radial-gradient(circle at top left, rgba(var(--a), 0.12), transparent 32%),
+        var(--panel-bg-primary);
+      box-shadow: var(--shadow-inset-subtle), var(--shadow-elev-strong);
     }
 
     .mood-panel__header {
@@ -86,26 +86,26 @@ type MoodOption = 'Focused' | 'Lazy' | 'Tired' | 'Anxious' | 'Confident';
 
     .mood-option {
       padding: 12px 16px;
-      border: 1px solid rgba(57, 214, 255, 0.2);
+      border: 1px solid rgba(var(--a), 0.2);
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.03);
+      background: var(--card-bg-muted);
       color: var(--text-main);
       font: inherit;
       font-weight: 600;
       cursor: pointer;
-      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+      transition: var(--transition-interactive);
     }
 
     .mood-option:hover {
       transform: translateY(-1px);
-      border-color: rgba(57, 214, 255, 0.45);
-      background: rgba(57, 214, 255, 0.08);
+      border-color: rgba(var(--a), 0.45);
+      background: rgba(var(--a), 0.08);
     }
 
     .mood-option--active {
-      border-color: rgba(255, 179, 71, 0.3);
-      background: linear-gradient(135deg, rgba(57, 214, 255, 0.18), rgba(255, 179, 71, 0.14));
-      box-shadow: 0 0 0 1px rgba(255, 179, 71, 0.08);
+      border-color: rgba(var(--h), 0.3);
+      background: linear-gradient(135deg, rgba(var(--a), 0.18), rgba(var(--h), 0.14));
+      box-shadow: 0 0 0 1px rgba(var(--h), 0.08);
     }
 
     .mood-guidance {
@@ -113,8 +113,8 @@ type MoodOption = 'Focused' | 'Lazy' | 'Tired' | 'Anxious' | 'Confident';
       padding: 18px 20px;
       border: 1px solid var(--metal-border);
       border-radius: 18px;
-      background: rgba(18, 22, 29, 0.94);
-      box-shadow: 0 0 0 1px rgba(73, 210, 255, 0.02), 0 16px 40px rgba(0, 0, 0, 0.18);
+      background: var(--card-bg);
+      box-shadow: var(--shadow-card);
       overflow: hidden;
     }
 
@@ -124,7 +124,7 @@ type MoodOption = 'Focused' | 'Lazy' | 'Tired' | 'Anxious' | 'Confident';
       inset: 0 auto auto 0;
       width: 100%;
       height: 1px;
-      background: linear-gradient(90deg, rgba(57, 214, 255, 0.36), transparent 82%);
+      background: var(--line-accent-mid);
     }
 
     .mood-guidance__label {
@@ -159,11 +159,11 @@ export class MoodCheckInComponent {
   readonly moods: MoodOption[] = ['Focused', 'Lazy', 'Tired', 'Anxious', 'Confident'];
 
   readonly guidanceByMood: Record<MoodOption, string> = {
-    Focused: 'Use your energy now. Complete your highest XP mission.',
-    Lazy: 'Do 5 minutes only. Start with the easiest mission.',
-    Tired: 'Choose a low-energy mission. Track expenses or do English practice.',
-    Anxious: 'Slow down. Complete one simple task and breathe.',
-    Confident: 'Take a bold action. Start your hardest mission.'
+    Focused: 'Energy is high. Protect it by finishing your focus mission before switching contexts.',
+    Lazy: 'Lower the bar: commit to 5 minutes on the easiest mission and keep going only if momentum appears.',
+    Tired: 'Use low-friction tasks first: update expenses, checklist, or one short training prompt.',
+    Anxious: 'Shrink the scope. Complete one simple task, then reassess from a calmer state.',
+    Confident: 'Use this window for a meaningful step. Take the hardest unfinished mission now.'
   };
 
   @Input() selectedMood: MoodOption | null = null;

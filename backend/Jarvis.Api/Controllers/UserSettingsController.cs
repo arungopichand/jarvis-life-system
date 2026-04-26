@@ -1,3 +1,4 @@
+using Jarvis.Api.Contracts;
 using Jarvis.Api.Data;
 using Jarvis.Api.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -25,12 +26,12 @@ public class UserSettingsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<UserSettings>> Update(UserSettings request)
+    public async Task<ActionResult<UserSettings>> Update([FromBody] SaveUserSettingsRequest request)
     {
         var settings = await GetOrCreateSettingsAsync();
 
         settings.DailySpendingLimit = request.DailySpendingLimit;
-        settings.MainSkill = request.MainSkill;
+        settings.MainSkill = request.MainSkill.Trim();
         settings.GymMinutesTarget = request.GymMinutesTarget;
         settings.ProteinGramsTarget = request.ProteinGramsTarget;
 

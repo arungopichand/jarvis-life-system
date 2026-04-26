@@ -22,6 +22,7 @@ import { Expense } from '../models/expense';
         <div class="finance-panel__total">
           <span>Total Spent Today</span>
           <strong>\${{ totalSpentToday.toFixed(2) }}</strong>
+          <p class="finance-panel__budget-note">{{ budgetContextMessage }}</p>
         </div>
       </div>
 
@@ -33,7 +34,7 @@ import { Expense } from '../models/expense';
             name="title"
             [ngModel]="expenseForm.title"
             (ngModelChange)="updateTitle($event)"
-            placeholder="Coffee"
+            placeholder="Coffee after workout"
           />
         </label>
 
@@ -61,15 +62,25 @@ import { Expense } from '../models/expense';
           />
         </label>
 
-        <button type="submit" class="finance-button">Add</button>
+        <button type="submit" class="finance-button" [disabled]="!isExpenseFormValid">
+          Add Expense
+        </button>
       </form>
 
       @if (errorMessage) {
-        <p class="error-message">{{ errorMessage }}</p>
+        <p class="error-message" aria-live="assertive">{{ errorMessage }}</p>
+      }
+
+      @if (acknowledgementMessage) {
+        <p class="finance-acknowledgement" aria-live="polite">{{ acknowledgementMessage }}</p>
+      }
+
+      @if (lastLoggedExpenseTitle) {
+        <p class="finance-continuity">Last logged: {{ lastLoggedExpenseTitle }}</p>
       }
 
       @if (expenses.length === 0) {
-        <p class="info-message">No expenses logged for today yet.</p>
+        <p class="info-message finance-empty-state" aria-live="polite">No expenses logged yet. Capture each spend as it happens to stay in control.</p>
       }
 
       <div class="expense-list">
@@ -98,8 +109,27 @@ import { Expense } from '../models/expense';
     .finance-panel__subtitle {
       margin: 10px 0 0;
       color: var(--text-muted);
-      max-width: 560px;
-      line-height: 1.6;
+      max-width: 620px;
+      line-height: 1.65;
+    }
+
+    .finance-panel__budget-note {
+      margin: 6px 0 0;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+
+    .finance-empty-state {
+      margin: 0 0 16px;
+    }
+
+    .finance-acknowledgement,
+    .finance-continuity {
+      margin: 0 0 12px;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      line-height: 1.5;
     }
 
     .expense-card {
@@ -113,7 +143,7 @@ import { Expense } from '../models/expense';
       inset: 0 auto auto 0;
       width: 100%;
       height: 1px;
-      background: linear-gradient(90deg, rgba(73, 210, 255, 0.32), transparent 82%);
+      background: linear-gradient(90deg, rgba(var(--a), 0.18), transparent 82%);
     }
   `]
 })
@@ -121,11 +151,32 @@ export class FinanceLabComponent {
   @Input({ required: true }) expenses!: Expense[];
   @Input({ required: true }) expenseForm!: { title: string; amount: number | null; category: string };
   @Input() totalSpentToday = 0;
+  @Input() dailySpendingLimit = 0;
   @Input() errorMessage = '';
+  @Input() acknowledgementMessage = '';
+  @Input() lastLoggedExpenseTitle = '';
 
   @Output() expenseFormChange = new EventEmitter<{ title: string; amount: number | null; category: string }>();
   @Output() addExpense = new EventEmitter<void>();
   @Output() removeExpense = new EventEmitter<number>();
+
+  get isExpenseFormValid(): boolean {
+    return Boolean(
+      this.expenseForm.title.trim() &&
+      this.expenseForm.amount !== null &&
+      this.expenseForm.category.trim()
+    );
+  }
+
+  get budgetContextMessage(): string {
+    const remaining = this.dailySpendingLimit - this.totalSpentToday;
+
+    if (remaining >= 0) {
+      return `${remaining.toFixed(2)} remaining in today's budget window.`;
+    }
+
+    return `${Math.abs(remaining).toFixed(2)} over today's budget limit.`;
+  }
 
   updateTitle(title: string): void {
     this.expenseFormChange.emit({

@@ -1,99 +1,68 @@
-# AngularApp
+# JARVIS Angular App
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.1.0.
+Angular 20 frontend for the JARVIS Life System.
 
-## Development server
+## Product Role
+The frontend delivers an intelligent, calm, token-governed Life OS interface for:
+- missions and execution flow
+- finance discipline tracking
+- focus and behavioral reinforcement
+- communication and confidence prompts
+- weekly review and continuity awareness
 
-To start a local development server, run:
+## Stack
+- Angular 20
+- TypeScript
+- SCSS token-based design system
+- Service worker support (PWA-ready build)
 
-```bash
-ng serve
-```
+## Commands
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Install:
 
 ```bash
-ng generate --help
+npm install
 ```
 
-## Building
-
-To build the project run:
+Run dev server:
 
 ```bash
-ng build
+npm start
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+Build production:
 
 ```bash
-ng test
+npm run build
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+Design-system audit:
 
 ```bash
-ng e2e
+npm run design:audit
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Design Governance
+- Global tokens and shared utilities live in `src/styles.scss`
+- Shell/integration styling lives in `src/app/app.scss`
+- `scripts/design-audit.mjs` warns on drift and fails on component-level hardcoded colors
+- See `DESIGN_SYSTEM.md` for usage rules and examples
 
-## Additional Resources
+## Environment Configuration
+- `src/environments/environment.ts` local development base URL
+- `src/environments/environment.prod.ts` production API URL
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Update production API endpoint before shipping.
 
-## Deployment Notes
+## Architecture Snapshot
+- `src/app/components` modular UI panels
+- `src/app/services` API clients
+- `src/app/models` shared contracts
+- root `App` orchestrates state and cross-module behavior
 
-### Environment Files
+## Next Frontend Milestones
+1. module-level routing and lazy loading
+2. state extraction from root component into facades/signals
+3. component test coverage for critical interaction flows
+4. backend-backed learning/communication module persistence
 
-API configuration now lives in Angular environment files:
-
-- `src/environments/environment.ts` - local development
-- `src/environments/environment.prod.ts` - production
-
-Current values:
-
-```ts
-// local
-apiBaseUrl: 'http://localhost:5197'
-
-// production
-apiBaseUrl: 'https://your-backend-url.com'
-```
-
-Before production deployment:
-
-1. Replace `https://your-backend-url.com` in `environment.prod.ts` with your real backend URL.
-2. Build the Angular app using the production configuration.
-
-### Build Commands
-
-Local development:
-
-```bash
-ng serve
-```
-
-Production build:
-
-```bash
-ng build
-```
-
-Angular will automatically use `environment.prod.ts` for the production build because of the file replacement in `angular.json`.

@@ -6,7 +6,7 @@ import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <section class="focus-timer-panel">
+    <section class="focus-timer-panel ui-panel">
       <div class="focus-timer-panel__header">
         <div>
           <p class="focus-timer-panel__eyebrow">Focus</p>
@@ -17,9 +17,10 @@ import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
         </div>
       </div>
 
-      <div class="focus-timer-display">
+      <div class="focus-timer-display ui-card ui-accent-line" [class.focus-timer-display--running]="isRunning">
         <span class="focus-timer-display__label">Current Countdown</span>
         <strong>{{ formattedTime }}</strong>
+        <p class="focus-timer-display__state">{{ timerStateMessage }}</p>
       </div>
 
       <div class="focus-timer-modes">
@@ -34,11 +35,11 @@ import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 
       <div class="focus-timer-actions">
         <button type="button" class="finance-button" (click)="startTimer()" [disabled]="isRunning">
-          Start
+          Start Focus Block
         </button>
 
         <button type="button" class="reset-day-button" (click)="pauseTimer()" [disabled]="!isRunning">
-          Pause
+          Pause Block
         </button>
 
         <button type="button" class="delete-button" (click)="resetTimer()">
@@ -48,7 +49,7 @@ import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 
       @if (showCompleteMessage) {
         <p class="success-message focus-timer-success">
-          Focus session complete. Mark one mission done if you completed it.
+          Focus block complete. Capture the result now and mark one mission as done.
         </p>
       }
     </section>
@@ -56,12 +57,6 @@ import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
   styles: [`
     .focus-timer-panel {
       padding: 24px;
-      border: 1px solid var(--metal-border);
-      border-radius: 24px;
-      background:
-        radial-gradient(circle at top right, rgba(255, 179, 71, 0.1), transparent 28%),
-        linear-gradient(180deg, rgba(18, 22, 30, 0.97), rgba(9, 11, 16, 0.99));
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 18px 46px rgba(0, 0, 0, 0.22);
     }
 
     .focus-timer-panel__header {
@@ -92,21 +87,8 @@ import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
       position: relative;
       margin-bottom: 18px;
       padding: 22px 20px;
-      border: 1px solid var(--metal-border);
-      border-radius: 20px;
-      background: rgba(18, 22, 29, 0.94);
-      box-shadow: 0 0 0 1px rgba(73, 210, 255, 0.02), 0 16px 40px rgba(0, 0, 0, 0.18);
       overflow: hidden;
       text-align: center;
-    }
-
-    .focus-timer-display::after {
-      content: '';
-      position: absolute;
-      inset: 0 auto auto 0;
-      width: 100%;
-      height: 1px;
-      background: linear-gradient(90deg, rgba(57, 214, 255, 0.36), transparent 82%);
     }
 
     .focus-timer-display__label {
@@ -124,6 +106,17 @@ import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
       letter-spacing: 0.08rem;
     }
 
+    .focus-timer-display__state {
+      margin: 10px 0 0;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .focus-timer-display--running {
+      box-shadow: 0 0 0 1px rgba(var(--a), 0.1), var(--glow-soft);
+    }
+
     .focus-timer-modes,
     .focus-timer-actions {
       display: flex;
@@ -137,9 +130,9 @@ import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 
     .focus-timer-success {
       margin-top: 16px;
-      border-color: rgba(66, 245, 158, 0.28);
-      background: linear-gradient(90deg, rgba(57, 214, 255, 0.12), rgba(66, 245, 158, 0.14));
-      box-shadow: 0 0 24px rgba(66, 245, 158, 0.12);
+      border-color: rgba(var(--s), 0.28);
+      background: linear-gradient(90deg, rgba(var(--a), 0.12), rgba(var(--s), 0.14));
+      box-shadow: 0 0 24px rgba(var(--s), 0.12);
       animation: focusTimerSuccess 1.4s ease;
     }
 
@@ -192,6 +185,18 @@ export class FocusTimerComponent implements OnDestroy {
     const seconds = this.secondsRemaining % 60;
 
     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  }
+
+  get timerStateMessage(): string {
+    if (this.isRunning) {
+      return 'Timer is running. Protect this block and stay on one task.';
+    }
+
+    if (this.showCompleteMessage) {
+      return 'Great finish. Log progress while the context is still fresh.';
+    }
+
+    return 'Choose a mode and start when you are ready for focused work.';
   }
 
   startTimer(): void {

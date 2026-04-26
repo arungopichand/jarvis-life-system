@@ -1,3 +1,4 @@
+using Jarvis.Api.Contracts;
 using Jarvis.Api.Data;
 using Jarvis.Api.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -41,12 +42,15 @@ public class ExpensesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Expense>> Create(Expense expense)
+    public async Task<ActionResult<Expense>> Create([FromBody] CreateExpenseRequest request)
     {
-        if (expense.ExpenseDate == default)
+        var expense = new Expense
         {
-            expense.ExpenseDate = DateTime.Today;
-        }
+            Title = request.Title.Trim(),
+            Amount = request.Amount,
+            Category = request.Category.Trim(),
+            ExpenseDate = request.ExpenseDate?.Date ?? DateTime.Today
+        };
 
         _dbContext.Expenses.Add(expense);
         await _dbContext.SaveChangesAsync();

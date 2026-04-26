@@ -69,9 +69,9 @@ import { FormsModule } from '@angular/forms';
       border: 1px solid var(--metal-border);
       border-radius: 24px;
       background:
-        radial-gradient(circle at top right, rgba(255, 179, 71, 0.12), transparent 28%),
-        linear-gradient(180deg, rgba(18, 22, 30, 0.97), rgba(9, 11, 16, 0.99));
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 18px 46px rgba(0, 0, 0, 0.22);
+        radial-gradient(circle at top right, rgba(var(--h), 0.12), transparent 28%),
+        var(--panel-bg-primary);
+      box-shadow: var(--shadow-inset-soft), var(--shadow-elev-strong);
     }
 
     .sleep-panel__header {
@@ -109,7 +109,7 @@ import { FormsModule } from '@angular/forms';
       padding: 14px 16px;
       border: 1px solid var(--metal-border);
       border-radius: 18px;
-      background: rgba(17, 21, 27, 0.88);
+      background: var(--color-surface-inset);
     }
 
     .sleep-panel__target-label {
@@ -146,12 +146,12 @@ import { FormsModule } from '@angular/forms';
       padding: 18px 20px;
       border: 1px solid var(--metal-border);
       border-radius: 18px;
-      background: rgba(18, 22, 29, 0.9);
+      background: var(--card-bg);
     }
 
     .sleep-card--primary {
-      border-color: rgba(57, 214, 255, 0.3);
-      box-shadow: 0 0 0 1px rgba(57, 214, 255, 0.08);
+      border-color: rgba(var(--a), 0.3);
+      box-shadow: 0 0 0 1px rgba(var(--a), 0.08);
     }
 
     .sleep-card__label {
